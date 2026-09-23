@@ -39,6 +39,7 @@
  .row label{grid-column:span 4;color:#cbd5e1;font-size:13px}
  .row .field{grid-column:span 8;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
 .fm-compact-row{grid-template-columns:max-content 220px;column-gap:16px;justify-content:start}
+.fm-compact-row[hidden]{display:none}
 .fm-compact-row label,.fm-compact-row .field{grid-column:auto}
 .content > .row + .row{margin-top:10px}
 .content > .row + .warn{margin-top:10px}
@@ -202,8 +203,9 @@
  </section>
  <section class="card" data-order-id="fm"><header><h2>Förmånstagarförordnande</h2></header>
  <div class="content">
- <div class="row fm-compact-row"><label for="fm_sandning">Skicka blankett via</label><div class="field"><select id="fm_sandning" class="short"><option value="">(välj)</option><option>E-post</option><option>Postadress</option></select></div></div>
- <div id="fm_warn" class="warn">Välj <b>E‑post</b> eller <b>Postadress</b>.</div>
+ <div class="btns"><label><input type="radio" name="fm_choice" value="same"> Ska inte ändras</label><label><input type="radio" name="fm_choice" value="change"> Ska ändras</label></div>
+ <div class="row fm-compact-row" id="fm_sandning_row" hidden><label for="fm_sandning">Skicka blankett via</label><div class="field"><select id="fm_sandning" class="short"><option value="">(välj)</option><option>E-post</option><option>Postadress</option></select></div></div>
+ <div id="fm_warn" class="warn">Välj <b>Ska inte ändras</b> eller <b>Ska ändras</b>. Vid ändring behöver du även välja hur blanketten ska skickas.</div>
  <div class="btns"><button class="btn btn-primary" id="btn_fm_add" title="Välj när förmånstagarförordnande ska skickas via e-post eller post." type="button">Lägg till</button></div>
  <div class="hr"></div>
  </div>
@@ -321,6 +323,8 @@ const selPlac=document.getElementById('tp_placeras');
 const selVC=document.getElementById('tp_valcentral');
 const warnTP=document.getElementById('tp_warn');
 const btnTPAdd=document.getElementById('btn_tp_add');
+const fmChoices=[...document.querySelectorAll('input[name="fm_choice"]')];
+const fmSandningRow=document.getElementById('fm_sandning_row');
 const selFM=document.getElementById('fm_sandning');
 const warnFM=document.getElementById('fm_warn');
 const btnFMAdd=document.getElementById('btn_fm_add');
@@ -336,7 +340,7 @@ const btnAwaitSaveCopy=document.getElementById('btn_await_save_copy');
 const btnNUpd=document.getElementById('btn_notes_update');
 function syncStandaloneButtons(){ [btnSchablonAdd, btnTPAdd, btnFMAdd, btnAnnatAdd, btnGrpCopy].forEach(btn=>{ if(btn) setStandaloneButtonState(btn, btn.classList.contains('active')); }); }
 function clearTPState(){ if(selPlac) selPlac.value=''; if(selVC) selVC.value=''; if(warnTP) warnTP.style.display='none'; setBlock('tp',''); if(btnTPAdd) setStandaloneButtonState(btnTPAdd, false); persistActiveButtons(); }
-function clearFMState(){ if(selFM) selFM.value=''; if(warnFM) warnFM.style.display='none'; setBlock('fm',''); if(btnFMAdd) setStandaloneButtonState(btnFMAdd, false); persistActiveButtons(); }
+function clearFMState(){ fmChoices.forEach(function(r){ r.checked=false; }); if(fmSandningRow) fmSandningRow.hidden=true; if(selFM) selFM.value=''; if(warnFM) warnFM.style.display='none'; setBlock('fm',''); if(btnFMAdd) setStandaloneButtonState(btnFMAdd, false); persistActiveButtons(); }
 function clearAnnatState(){ if(selU) selU.value=''; if(selT) selT.value=''; if(warnA) warnA.style.display='none'; setBlock('annat',''); if(btnAnnatAdd) setStandaloneButtonState(btnAnnatAdd, false); persistActiveButtons(); }
 function clearNotesState(){ taNotes.value=''; setBlock('ovrigt',''); btnNUpd.classList.remove('active'); saveNotes(); }
 function clearNotesExtraState(){ if(!taNotesExtra) return; taNotesExtra.value=''; saveNotesExtra(); }
@@ -461,23 +465,14 @@ document.querySelectorAll('section.card[data-card-kind="hybrid"]').forEach(card=
 buffGroup.querySelector('#btn_buff_avr').addEventListener('click', function(){ if(this.classList.contains('active')){ setBlock('buff',''); setActiveInGroup('buff', null); showToast('Buffert: Avrådan av'); return; } setBlock('buff','Målet har inte behandlats i mötet på grund av begränsad buffert. Jag har rekommenderat dig att först spara ihop en buffert på ett vanligt sparkonto alternativt ett olåst fasträntekonto via din bank som är tillräcklig för att klara en kortsiktig ekonomisk utmaning innan jag rekommenderar att börja spara långsiktigt hos oss.'); setActiveInGroup('buff', this); showToast('Buffert: Avrådan'); });
 buffGroup.querySelector('#btn_buff_utry').addEventListener('click', function(){ if(this.classList.contains('active')){ setBlock('buff',''); setActiveInGroup('buff', null); showToast('Buffert: Utrymme av'); return; } setBlock('buff','Jag har rekommenderat dig att öka upp din buffert samtidigt som jag har rekommenderat att spara långsiktigt i en kapitalförsäkring. Enligt den ekonomiska sammanställningen finns utrymme till båda delarna.'); setActiveInGroup('buff', this); showToast('Buffert: Utrymme finns'); });
 // FM
-function validateFM(){ const v=selFM.value.trim(); const ok=!!v; warnFM.style.display = ok ? 'none' : 'block'; return ok ? v : null; }
-function buildFM(v){ const via = (v==='E-post') ? 'e-postadress' : 'postadress'; return `FÖRMÅNSTAGARFÖRORDNANDE\nDu har informerat mig att du vill ändra ordningen i ditt förmånstagarförordnande gällande din kapitalförsäkring. Jag skickar till din ${via}. För att ändra förmånstagare är det upp till dig att fylla i blanketten och skicka tillbaka den till oss innan ändringen blir giltig.`; }
-btnFMAdd.addEventListener('click', function(){ if(this.classList.contains('active')){ clearFMState(); showToast('Förmånstagarförordnande: borttagen'); return; } const v=validateFM(); if(!v) return; setBlock('fm', buildFM(v)); setStandaloneButtonState(this, true); persistActiveButtons(); showToast('Förmånstagarförordnande: tillagd'); });
-function syncFMIfActive(){
- if(!btnFMAdd || !btnFMAdd.classList.contains('active')){ if(warnFM) warnFM.style.display='none'; return; }
- const v=(selFM && selFM.value ? selFM.value : '').trim();
- if(!v){
-  setBlock('fm','');
-  setStandaloneButtonState(btnFMAdd, false);
-  persistActiveButtons();
-  if(warnFM) warnFM.style.display='block';
-  return;
- }
- if(warnFM) warnFM.style.display='none';
- setBlock('fm', buildFM(v));
-}
-if(selFM){ ['input','change'].forEach(function(ev){ selFM.addEventListener(ev, syncFMIfActive); }); }
+function getFMChoice(){ const selected=fmChoices.find(function(r){ return r.checked; }); return selected ? selected.value : ''; }
+function validateFM(){ const choice=getFMChoice(); const sending=(selFM.value||'').trim(); const ok=choice==='same' || (choice==='change' && !!sending); warnFM.style.display=ok?'none':'block'; return ok ? {choice:choice,sending:sending} : null; }
+function buildFM(v){ if(v.choice==='same') return 'FÖRMÅNSTAGARFÖRORDNANDE\nVi har pratat om vem du vill ska få ersättningar och sparanden om du skulle avlida. Vi har säkerställt att förmånstagarförordnandena överensstämmer med dina önskemål och din nuvarande familjesituation. Inga förändringar är aktuella i dagsläget.'; return 'FÖRMÅNSTAGARFÖRORDNANDE\nVi har pratat om vem du vill ska få ersättningar och sparanden om du skulle avlida.\nRelevanta blanketter kommer att skickas till dig via '+(v.sending==='E-post'?'e-post':'post')+' för de försäkringar och sparanden där ändringar behöver göras. Det är ditt ansvar att fylla i, underteckna och skicka tillbaka blanketterna så att ändringarna kan registreras och börja gälla.'; }
+function updateFMVisibility(){ const change=getFMChoice()==='change'; fmSandningRow.hidden=!change; if(!change) selFM.value=''; }
+btnFMAdd.addEventListener('click', function(){ if(this.classList.contains('active')){ clearFMState(); showToast('Förmånstagarförordnande: borttagen'); return; } const v=validateFM(); if(!v) return; setBlock('fm',buildFM(v)); setStandaloneButtonState(this,true); persistActiveButtons(); showToast('Förmånstagarförordnande: tillagd'); });
+function syncFMIfActive(){ updateFMVisibility(); if(!btnFMAdd || !btnFMAdd.classList.contains('active')){ if(warnFM) warnFM.style.display='none'; return; } const v=validateFM(); if(!v){ setBlock('fm',''); setStandaloneButtonState(btnFMAdd,false); persistActiveButtons(); return; } setBlock('fm',buildFM(v)); }
+fmChoices.forEach(function(r){ r.addEventListener('change',syncFMIfActive); });
+if(selFM){ ['input','change'].forEach(function(ev){ selFM.addEventListener(ev,syncFMIfActive); }); }
 if(btnGrpCopy){ btnGrpCopy.addEventListener('click', function(){ if(this.classList.contains('active')){ setBlock('grp',''); setStandaloneButtonState(this, false); persistActiveButtons(); showToast('Grp/Skador: borttagen'); return; } const text="GRP/SKADOR\nVi har i dag gått igenom ditt behov av fackliga försäkringar. Jag har informerat dig om hur ditt nuvarande försäkringsskydd ser ut och hänvisat dig till vår hemsida för eventuella kompletteringar. \nJag har även ställt frågor kring eventuella oanmälda skador och hänvisat dig till rätt kontaktväg för att hantera dessa."; setBlock('grp', text); setStandaloneButtonState(this, true); persistActiveButtons(); showToast('Grp/Skador: tillagd'); }); }
 // Annat mål
 function validateAnnat(){ const u=selU.value.trim(), t=selT.value.trim(); const ok= !!u && !!t; warnA.style.display = ok ? 'none' : 'block'; return ok ? {urspr:u, till:t} : null; }
@@ -489,13 +484,13 @@ if(btnAwaitSaveCopy){ btnAwaitSaveCopy.addEventListener('click', async function(
 btnNUpd.addEventListener('click', function(){ const t = taNotes.value.trim(); setBlock('ovrigt', t ? 'KOMPLETTERANDE DOKUMENTATION\n'+t : ''); if(t) this.classList.add('active'); else this.classList.remove('active'); showToast('Egna tillägg uppdaterade'); });
 document.getElementById('btn_copy').addEventListener('click', async function(){ const text=out.textContent||''; if(!text.trim()) return showToast('Ingen text att kopiera.'); try{ await navigator.clipboard.writeText(text); showToast('Text kopierad.'); } catch{ const ta=document.createElement('textarea'); ta.value=text; document.body.appendChild(ta); ta.select(); try{ document.execCommand('copy'); }catch(_){ } document.body.removeChild(ta); showToast('Text kopierad.'); } });
 // snapshot fields + listeners
-function snapshotFields(){ return { tp_placeras: selPlac.value, tp_valcentral: selVC.value, fm_sandning: selFM.value, annat_urspr: selU.value, annat_tillagg: selT.value }; }
-;['input','change'].forEach(ev=>{ [selPlac, selVC, selFM, selU, selT].forEach(el=>{ el.addEventListener(ev, ()=> safeFields()); }); });
+function snapshotFields(){ return { tp_placeras: selPlac.value, tp_valcentral: selVC.value, fm_choice: getFMChoice(), fm_sandning: selFM.value, annat_urspr: selU.value, annat_tillagg: selT.value }; }
+;['input','change'].forEach(ev=>{ [selPlac, selVC, selFM, selU, selT].concat(fmChoices).forEach(el=>{ el.addEventListener(ev, ()=> safeFields()); }); });
 function safeFields(){ try{ safeStorage.setItem('othernotes.fields.v1', JSON.stringify(snapshotFields())); }catch(_){ } }
 taNotes.addEventListener('input', saveNotes); if(taNotesExtra) taNotesExtra.addEventListener('input', saveNotesExtra);
 // init
 try{ const s = JSON.parse(safeStorage.getItem('othernotes.store.v1')||'{}'); if(s && typeof s==='object'){ Object.keys(s).forEach(k=>{ if(typeof s[k]==='string') store[k]=s[k]; }); } }catch(_){ }
-renderOut(); restoreActiveButtons(); syncStandaloneButtons(); loadNotes(); loadNotesExtra(); try{ const f=JSON.parse(safeStorage.getItem('othernotes.fields.v1')||'{}'); if(f.tp_placeras) selPlac.value=f.tp_placeras; if(f.tp_valcentral) selVC.value=f.tp_valcentral; if(f.fm_sandning) selFM.value=f.fm_sandning; if(f.annat_urspr) selU.value=f.annat_urspr; if(f.annat_tillagg) selT.value=f.annat_tillagg; }catch(_){ }
+renderOut(); restoreActiveButtons(); syncStandaloneButtons(); loadNotes(); loadNotesExtra(); try{ const f=JSON.parse(safeStorage.getItem('othernotes.fields.v1')||'{}'); if(f.tp_placeras) selPlac.value=f.tp_placeras; if(f.tp_valcentral) selVC.value=f.tp_valcentral; if(f.fm_choice){ const r=fmChoices.find(function(x){ return x.value===f.fm_choice; }); if(r) r.checked=true; } if(f.fm_sandning) selFM.value=f.fm_sandning; updateFMVisibility(); if(f.annat_urspr) selU.value=f.annat_urspr; if(f.annat_tillagg) selT.value=f.annat_tillagg; }catch(_){ }
 function stod1ResetAll(){
  performFullReset();
  try{ safeStorage.removeItem('othernotes.collapse.v1'); }catch(_){ }
