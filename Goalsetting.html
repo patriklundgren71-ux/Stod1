@@ -97,9 +97,7 @@
  <div class="field"><input class="short" id="mb_p_age" type="number" min="60" max="70" value="65" inputmode="numeric" /><span class="unit">år</span></div>
  </div>
  <div class="row"><label for="mb_p_income">Nuvarande inkomst</label><div class="field"><input id="mb_p_income" type="number" min="0" step="100" value="" inputmode="numeric" /><span class="unit">kr/mån (före skatt)</span></div></div>
- <div class="row"><label>Pensionsmål anges som</label><div class="field"><label style="display:flex;align-items:center;gap:6px"><input type="radio" name="mb_p_goal_mode" id="mb_p_mode_amount" value="amount" checked /> belopp</label><label style="display:flex;align-items:center;gap:6px"><input type="radio" name="mb_p_goal_mode" id="mb_p_mode_percent" value="percent" /> procent av inkomsten</label></div></div>
- <div class="row" id="mb_p_amount_row"><label for="mb_p_amt">Önskad pension</label><div class="field"><input id="mb_p_amt" type="number" min="0" step="100" value="" inputmode="numeric" /><span class="unit">kr/mån (före skatt)</span></div></div>
- <div class="row" id="mb_p_percent_row" style="display:none"><label for="mb_p_percent">Önskad pension</label><div class="field"><input class="short" id="mb_p_percent" type="number" min="1" max="100" step="1" value="80" inputmode="numeric" /><span class="unit">% av nuvarande inkomst</span><span class="unit" id="mb_p_calculated"></span></div></div>
+ <div class="row" id="mb_p_percent_row"><label for="mb_p_percent">Önskad pension</label><div class="field"><input class="short" id="mb_p_percent" type="number" min="1" max="100" step="1" value="80" inputmode="numeric" /><span class="unit">% av nuvarande inkomst</span><span class="unit" id="mb_p_calculated"></span></div></div>
  <div class="row"><label for="mb_p_years">Antal år (första perioden)</label><div class="field"><input class="short" id="mb_p_years" type="number" min="1" max="40" value="15" inputmode="numeric" /><span class="unit">år</span></div></div>
  <div id="mb_p_warn" class="warn">Kontrollera pensionsålder, pensionsmål och antal år.</div>
  <div class="btns" style="margin-top:16px"><button class="btn btn-primary" id="mb_btn_add" title="Välj när du vill generera och direkt kopiera ett pensionsmål med pensionsålder, månadsbelopp och antal år." type="button">Kopiera pensionsmål</button><button class="btn btn-primary" id="mb_btn_tp_copy" title="Välj när du vill kopiera standardtext om att tjänstepensionen ska ses över." type="button">Kopiera tjänstepension</button></div>
@@ -187,14 +185,14 @@
  function setExpanded(exp){ lh.setAttribute('aria-expanded',exp?'true':'false'); rh.setAttribute('aria-expanded',exp?'true':'false'); setLabel(lb,exp); setLabel(rb,exp); }
  function onClick(){ var exp=lh.getAttribute('aria-expanded')==='true'; setExpanded(!exp); }
  if(lb) lb.addEventListener('click', onClick); if(rb) rb.addEventListener('click', onClick); setExpanded(false);
- var age=q('mb_p_age'), income=q('mb_p_income'), amt=q('mb_p_amt'), percent=q('mb_p_percent'), modeAmount=q('mb_p_mode_amount'), modePercent=q('mb_p_mode_percent'), amountRow=q('mb_p_amount_row'), percentRow=q('mb_p_percent_row'), calculated=q('mb_p_calculated'), yrs=q('mb_p_years'), out=q('mb_output'), btnCopyOut=q('mb_btn_copy_output'), warn=q('mb_p_warn');
+ var age=q('mb_p_age'), income=q('mb_p_income'), percent=q('mb_p_percent'), calculated=q('mb_p_calculated'), yrs=q('mb_p_years'), out=q('mb_output'), btnCopyOut=q('mb_btn_copy_output'), warn=q('mb_p_warn');
  function fmt(n){ try{return new Intl.NumberFormat('sv-SE').format(Number(n)).replace(/\u00A0/g,' ');}catch(e){return String(n);} }
  function setWarn(show){ if(warn) warn.style.display=show?'block':'none'; }
- function goalAmount(){ if(modePercent.checked){ var i=Number(income.value), p=Number(percent.value); return isFinite(i)&&i>0&&isFinite(p)&&p>0&&p<=100 ? Math.round(i*p/100) : 0; } var m=Number(amt.value); return isFinite(m)&&m>0 ? m : 0; }
- function syncMode(){ amountRow.style.display=modeAmount.checked?'grid':'none'; percentRow.style.display=modePercent.checked?'grid':'none'; var m=goalAmount(); calculated.textContent=modePercent.checked&&m ? '= '+fmt(m)+' kr/mån' : ''; if(build()) setWarn(false); }
- function build(){ var a=Number(age.value), m=goalAmount(), y=Number(yrs.value); if(!isFinite(a)||!isFinite(y)) return ''; if(a<60||a>70||m<=0||y<1||y>40) return ''; if(modePercent.checked){ var p=Number(percent.value); return 'Målet är att du vill gå i pension vid '+a+' års ålder och under de första '+y+' åren ha en pension som motsvarar '+fmt(p)+' % av din slutlön. Beräknat utifrån din nuvarande inkomst motsvarar det i dag '+fmt(m)+' kr per månad före skatt.'; } return 'Målet är att du vill gå i pension vid '+a+' års ålder, och vill ha '+fmt(m)+' kronor i månaden före skatt under första '+y+' åren.'; }
- ['input','change'].forEach(function(ev){ [age,income,amt,percent,modeAmount,modePercent,yrs].forEach(function(el){ if(el) el.addEventListener(ev,syncMode); }); });
- syncMode();
+ function goalAmount(){ var i=Number(income.value), p=Number(percent.value); return isFinite(i)&&i>0&&isFinite(p)&&p>0&&p<=100 ? Math.round(i*p/100) : 0; }
+ function syncGoal(){ var m=goalAmount(); calculated.textContent=m ? '= '+fmt(m)+' kr/mån' : ''; if(build()) setWarn(false); }
+ function build(){ var a=Number(age.value), m=goalAmount(), y=Number(yrs.value), p=Number(percent.value); if(!isFinite(a)||!isFinite(y)) return ''; if(a<60||a>70||m<=0||y<1||y>40) return ''; return 'Målet är att du vill gå i pension vid '+a+' års ålder och under de första '+y+' åren ha en pension som motsvarar '+fmt(p)+' % av din slutlön. Beräknat utifrån din nuvarande inkomst motsvarar det i dag '+fmt(m)+' kr per månad före skatt.'; }
+ ['input','change'].forEach(function(ev){ [age,income,percent,yrs].forEach(function(el){ if(el) el.addEventListener(ev,syncGoal); }); });
+ syncGoal();
  var bAdd=q('mb_btn_add'); if(bAdd){ bAdd.addEventListener('click', async function(){ var t=build(); if(!t){ setWarn(true); return; } setWarn(false); out.textContent=t; try{ await navigator.clipboard.writeText(t); }catch(e){ var ta=document.createElement('textarea'); ta.value=t; document.body.appendChild(ta); ta.select(); try{ document.execCommand('copy'); }catch(_){} document.body.removeChild(ta);} if(window.stod1ShowToast) window.stod1ShowToast('Pensionsmål kopierat.'); }); } if(btnCopyOut){ btnCopyOut.addEventListener('click', async function(){ var t=(out.textContent||'').trim(); if(!t || t==='— tomt —') return; try{ await navigator.clipboard.writeText(t); }catch(e){ var ta=document.createElement('textarea'); ta.value=t; document.body.appendChild(ta); ta.select(); try{ document.execCommand('copy'); }catch(_){} document.body.removeChild(ta);} if(window.stod1ShowToast) window.stod1ShowToast('Pensionsmål kopierat.'); }); }
 })();
 </script>
@@ -271,10 +269,7 @@
  var q = function(id){ return document.getElementById(id); };
  if(q('mb_p_age')) q('mb_p_age').value=65;
  if(q('mb_p_income')) q('mb_p_income').value='';
- if(q('mb_p_amt')) q('mb_p_amt').value='';
  if(q('mb_p_percent')) q('mb_p_percent').value=80;
- if(q('mb_p_mode_amount')) q('mb_p_mode_amount').checked=true;
- if(q('mb_p_mode_percent')) q('mb_p_mode_percent').checked=false;
  if(q('mb_p_years')) q('mb_p_years').value=15;
  if(q('mb_output')) q('mb_output').textContent='— tomt —';
  if(q('mb_p_warn')) q('mb_p_warn').style.display='none';

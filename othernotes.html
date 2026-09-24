@@ -242,7 +242,13 @@
  <div class="hr"></div>
  </div>
  </section>
-   </div>
+ <section class="card" data-order-id="pa16_sarskild" data-card-kind="hybrid" data-hybrid-init="pa16SarskildCard" data-storage-ns="othernotes.hybrid.pa16_sarskild" data-block-id="pa16_sarskild"><header><h2>PA-16 - särskild information</h2></header>
+ <div class="content">
+ <div class="btns"><button class="btn btn-primary" type="button">Lägg till</button></div>
+ <div class="hr"></div>
+ </div>
+ </section>
+    </div>
  <!-- Högerspalt -->
  <section class="card is-sticky" id="sek_out"><header><h2>Sammanställd text</h2><button class="out-sticky-toggle" id="btn_sticky_out" type="button">Lås upp</button></header>
  <div class="content stack">
@@ -416,6 +422,21 @@ function validateTP(){ const a=selPlac.value.trim(), b=selVC.value.trim(); const
 function buildTP({a,b}){ return [ `Vi har idag pratat om din tjänstepension och du har gjort ett aktivt val som innebär att intjänat tjänstepensionskapital ska placeras hos ${a}`, `Under rådgivningen har du muntligen gett mig fullmakt att tillsammans med dig och i samförstånd logga in på din valcentral ${b} och genomfört ändringen och flytten.`, `(Signeringarna för detta gjordes med ditt bank-id under tiden vi delat skärm.)` ].join('\n'); }
 btnTPAdd.addEventListener('click', function(){ if(this.classList.contains('active')){ clearTPState(); showToast('Tjänstepension borttagen.'); return; } const v=validateTP(); if(!v) return; setBlock('tp', buildTP(v)); setStandaloneButtonState(this, true); persistActiveButtons(); showToast('Tjänstepension tillagd.'); });
 
+function initPa16SarskildCard(card){
+ const blockKey=card.dataset.blockId||'pa16_sarskild';
+ const storageNs=card.dataset.storageNs||'othernotes.hybrid.pa16_sarskild';
+ const stateKey=storageNs+'.state.v1';
+ const button=card.querySelector('.content .btn');
+ if(!button) return;
+ const text='PA-16 - SÄRSKILD INFORMATION\nJag har idag informerat dig om att pensionsprognosen har presenterats utifrån ett jämförbart avtalsområde som i stora delar motsvarar PA16. Detta har inte påverkat den rekommendation som vi har lämnat till dig.\n\nPå grund av en tillfällig systembegränsning kommer de dokument som genereras automatiskt att innehålla hänvisningar till AKAP-KR eller KAP-KL. För att säkerställa att du får korrekt information kommer vi därför också att göra relevant förköpsinformation för PA16 samt en checklista för hur du själv genomför flytten eller omvalet enligt PA16 tillgänglig på Mina sidor.';
+ function load(){try{return JSON.parse(safeStorage.getItem(stateKey)||'{}').active===true}catch(_){return false}}
+ function save(active){safeStorage.setItem(stateKey,JSON.stringify({active:!!active}))}
+ function apply(active){setStandaloneButtonState(button,active);setBlock(blockKey,active?text:'')}
+ function reset(){save(false);apply(false)}
+ button.addEventListener('click',function(){const active=!load();save(active);apply(active);showToast('PA-16 - särskild information: '+(active?'tillagd':'borttagen'))});
+ registerHybridCard(card,{blockId:blockKey,storageNamespace:storageNs,reset:reset});
+ apply(load());
+}
 function initHallbarhetCard(card){
  const cardId=card.dataset.orderId||'hybrid_card';
  const blockKey=card.dataset.blockId||cardId;
@@ -460,6 +481,7 @@ function initHallbarhetCard(card){
  applyState(loadState());
 }
 registerHybridInitializer('hallbarhetCard', initHallbarhetCard);
+registerHybridInitializer('pa16SarskildCard', initPa16SarskildCard);
 document.querySelectorAll('section.card[data-card-kind="hybrid"]').forEach(card=>{ const initKey=card.dataset.hybridInit||''; const initializer=hybridCardInitializers.get(initKey); if(typeof initializer==='function') initializer(card); });
 // Buffert
 buffGroup.querySelector('#btn_buff_avr').addEventListener('click', function(){ if(this.classList.contains('active')){ setBlock('buff',''); setActiveInGroup('buff', null); showToast('Buffert: Avrådan av'); return; } setBlock('buff','Målet har inte behandlats i mötet på grund av begränsad buffert. Jag har rekommenderat dig att först spara ihop en buffert på ett vanligt sparkonto alternativt ett olåst fasträntekonto via din bank som är tillräcklig för att klara en kortsiktig ekonomisk utmaning innan jag rekommenderar att börja spara långsiktigt hos oss.'); setActiveInGroup('buff', this); showToast('Buffert: Avrådan'); });
