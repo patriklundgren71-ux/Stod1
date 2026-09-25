@@ -196,7 +196,18 @@
 <main>
  <div class="notes-tools-row"><div id="notes_tools_host" class="notes-tools"></div><div></div></div>
  <div class="stack" id="notes_left_stack" style="gap:16px">
- <section class="card" data-order-id="tp_new" data-card-kind="hybrid" data-hybrid-init="tpNewCard" data-storage-ns="sparande.hybrid.tp_new" data-block-id="tp_new"><header><h2>Tjänstepension</h2></header>
+ <section class="card" data-order-id="risk" data-card-kind="hybrid" data-hybrid-init="riskCard" data-storage-ns="sparande.hybrid.risk"><header><h2>Risk</h2></header>
+ <div class="content stack">
+ <div class="risk-inline-grid">
+ <div class="risk-inline-field"><label>Utgångsläge</label><select data-role="risk-initial"><option value="">(välj)</option><option>låg risk</option><option>medelrisk</option><option>hög risk</option></select></div>
+ <div class="risk-inline-field"><label>Rekommendation</label><select data-role="risk-recommendation"><option value="">(välj)</option><option>låg risk</option><option>medelrisk</option><option>hög risk</option></select></div>
+ </div>
+ <div class="btns"><button class="btn btn-primary" type="button">Kopiera</button></div>
+ <div class="warn">Välj både Utgångsläge och Rekommendation.</div>
+ <div class="hr"></div>
+ </div>
+ </section>
+<section class="card" data-order-id="tp_new" data-card-kind="hybrid" data-hybrid-init="tpNewCard" data-storage-ns="sparande.hybrid.tp_new" data-block-id="tp_new"><header><h2>Tjänstepension</h2></header>
  <div class="content stack">
  <div class="tp-new-shared"><label><input type="checkbox" data-role="shared">Delad skärm</label></div>
  <div class="sparbeslut-main tp-new-main"><label><input type="radio" name="tp_new_main" value="changes">Ändringar genomförs</label><label><input type="radio" name="tp_new_main" value="await">Avvaktar med beslut</label><label><input type="radio" name="tp_new_main" value="none">Inga ändringar behövs</label></div>
@@ -218,9 +229,18 @@
  <div class="hr"></div>
  </div>
  </section>
-
-
- <section class="card" data-order-id="sparbeslut" data-card-kind="hybrid" data-hybrid-init="sparbeslutCard" data-storage-ns="sparande.hybrid.sparbeslut" data-block-id="sparbeslut"><header><h2>Sparbeslut</h2></header>
+<section class="card" data-order-id="annat_mal" data-card-kind="hybrid" data-hybrid-init="annatMalEnkelCard" data-storage-ns="sparande.hybrid.annatmal.enkel" data-block-id="annat_mal"><header><h2>Annat mål hittats under rådgivningen</h2></header>
+ <div class="content">
+ <div class="annatm-grid-top">
+ <div class="annatm-field"><label for="annat_mal_urspr">Ursprungsmål</label><select id="annat_mal_urspr" class="short"><option value="">(välj)</option><option value="Pension">Pensionsspar</option><option value="Målspar">Målspar</option><option value="Tjänstepension">Tjänstepension</option><option value="Livförsäkring">Livförsäkring</option></select></div>
+ <div class="annatm-field"><label for="annat_mal_tillagg">Tilläggsmål</label><select id="annat_mal_tillagg" class="short"><option value="">(välj)</option><option value="Pension">Pensionsspar</option><option value="Målspar">Målspar</option><option value="Tjänstepension">Tjänstepension</option><option value="Livförsäkring">Livförsäkring</option></select></div>
+ </div>
+ <div class="annatm-actions"><button class="btn btn-primary" id="btn_annat_mal_add" type="button">Kopiera</button></div>
+ <div id="annat_mal_warn" class="warn">Välj Ursprungsmål och Tilläggsmål.</div>
+ <div class="hr"></div>
+ </div>
+ </section>
+<section class="card" data-order-id="sparbeslut" data-card-kind="hybrid" data-hybrid-init="sparbeslutCard" data-storage-ns="sparande.hybrid.sparbeslut" data-block-id="sparbeslut"><header><h2>Sparbeslut</h2></header>
  <div class="content stack">
   <div class="sparbeslut-main sparbeslut-main-aligned">
    <label><input type="radio" name="sparbeslut_main" value="genomfors">Sparande genomförs</label>
@@ -244,18 +264,9 @@
   <div class="warn"></div>
   <div class="btns"><button class="btn btn-primary" type="button">Lägg till</button></div><div class="hr"></div>
  </div></section>
- <section class="card" data-order-id="annat_mal" data-card-kind="hybrid" data-hybrid-init="annatMalEnkelCard" data-storage-ns="sparande.hybrid.annatmal.enkel" data-block-id="annat_mal"><header><h2>Annat mål hittats under rådgivningen</h2></header>
- <div class="content">
- <div class="annatm-grid-top">
- <div class="annatm-field"><label for="annat_mal_urspr">Ursprungsmål</label><select id="annat_mal_urspr" class="short"><option value="">(välj)</option><option value="Pension">Pensionsspar</option><option value="Målspar">Målspar</option><option value="Tjänstepension">Tjänstepension</option><option value="Livförsäkring">Livförsäkring</option></select></div>
- <div class="annatm-field"><label for="annat_mal_tillagg">Tilläggsmål</label><select id="annat_mal_tillagg" class="short"><option value="">(välj)</option><option value="Pension">Pensionsspar</option><option value="Målspar">Målspar</option><option value="Tjänstepension">Tjänstepension</option><option value="Livförsäkring">Livförsäkring</option></select></div>
- </div>
- <div class="annatm-actions"><button class="btn btn-primary" id="btn_annat_mal_add" type="button">Kopiera</button></div>
- <div id="annat_mal_warn" class="warn">Välj Ursprungsmål och Tilläggsmål.</div>
- <div class="hr"></div>
- </div>
- </section>
- <section class="card" data-order-id="buff" data-card-hidden="1"><header><h2>Begränsad buffert</h2></header>
+
+
+   <section class="card" data-order-id="buff" data-card-hidden="1"><header><h2>Begränsad buffert</h2></header>
  <div class="content stack">
  <div class="btns" data-group="buff">
  <button class="btn btn-ghost" id="btn_buff_avr" title="Välj när du avråder från sparande eftersom buffert saknas och utrymme inte finns." type="button">Avrådan</button>
@@ -381,18 +392,7 @@
  </div>
  </section>
 
- <section class="card" data-order-id="risk" data-card-kind="hybrid" data-hybrid-init="riskCard" data-storage-ns="sparande.hybrid.risk"><header><h2>Risk</h2></header>
- <div class="content stack">
- <div class="risk-inline-grid">
- <div class="risk-inline-field"><label>Utgångsläge</label><select data-role="risk-initial"><option value="">(välj)</option><option>låg risk</option><option>medelrisk</option><option>hög risk</option></select></div>
- <div class="risk-inline-field"><label>Rekommendation</label><select data-role="risk-recommendation"><option value="">(välj)</option><option>låg risk</option><option>medelrisk</option><option>hög risk</option></select></div>
- </div>
- <div class="btns"><button class="btn btn-primary" type="button">Kopiera</button></div>
- <div class="warn">Välj både Utgångsläge och Rekommendation.</div>
- <div class="hr"></div>
- </div>
- </section>
- </div>
+  </div>
  <!-- Högerspalt -->
  <section class="card is-sticky" id="sek_out"><header><h2>Sammanställd text</h2><button class="out-sticky-toggle" id="btn_sticky_out" type="button">Lås upp</button></header>
  <div class="content stack">
