@@ -14,7 +14,7 @@
 })();
 </script>
 <script>
-const APP = { version: '2.2.238' };
+const APP = { version: '2.2.239' };
 </script>
 <style>
  :root{--bg:#0f172a;--panel:#111827;--card:#1f2937;--line:#2b3545;--text:#e5e7eb;--muted:#9ca3af;--accent:#0ea5e9;--ink:#0b1220}
@@ -193,11 +193,20 @@ header.app .dropdown .menu{ z-index:20020 !important; }
  <div>Version</div>
  <div>Skapad av: <span id="kundavisering_open" style="cursor:pointer">Patrik Lundgren</span></div>
  <div>Kontakt: patrik.lundgren@folksam.se</div>
- <div>Senast uppdaterad: 2026-09-25</div>
+ <div>Senast uppdaterad: 2026-10-04</div>
  <div>Internt stödverktyg för dokumentation, stödmaterial och praktiska arbetsverktyg.</div>
  </div>
  </div>
  <div class="actions"><button class="btn-link" id="about_close" type="button">Stäng</button></div>
+ </div>
+</div>
+<div aria-labelledby="update_title" aria-modal="true" class="backdrop" id="update_backdrop" role="dialog" style="display:none">
+ <div class="modal" style="width:min(520px,92vw)">
+ <header><h2 id="update_title" style="margin:0;font-size:15px">Stöd1 har uppdaterats</h2></header>
+ <div class="body">
+ <p style="margin:0">Du använder nu den senaste publicerade versionen.</p>
+ </div>
+ <div class="actions"><button class="btn-link" id="update_close" type="button">Stäng</button></div>
  </div>
 </div>
 <!-- Dagsmål modal -->
@@ -635,6 +644,7 @@ header.app .dropdown .menu{ z-index:20020 !important; }
 <script>
 (function(){
  const CHANGELOG = [
+ { ver:'2.2.239', date:'2026-10-04', items:[ 'Rensa allt: Stöd1 hämtar nu automatiskt en ny publicerad version.' ] },
  { ver:'2.2.237', date:'2026-09-25', items:[ 'Tjänstepension: PA16:s särskilda information ingår nu automatiskt vid omval.' ] },  
  { ver:'2.2.234', date:'2026-09-25', items:[ 'Tjänstepension: avtalsområde återställs när alla val tas bort.' ] },
  { ver:'2.2.229', date:'2026-09-24', items:[ 'Sparbeslut: tydligare orsaker för annan sparnivå och avvaktan.' ] },
@@ -686,6 +696,19 @@ header.app .dropdown .menu{ z-index:20020 !important; }
  const GOAL_SRC='./Goalsetting.html';
  const NOTES_SRC='./othernotes.html';
  const SAVINGS_SRC='./savings.html';
+ const UPDATE_MARKER='stod1.updated.v1';
+ const updateBd=document.getElementById('update_backdrop');
+ const updateClose=document.getElementById('update_close');
+ function closeUpdate(){ if(updateBd) updateBd.style.display='none'; }
+ if(updateClose) updateClose.addEventListener('click', closeUpdate);
+ if(updateBd) updateBd.addEventListener('click', function(e){ if(e.target===updateBd) closeUpdate(); });
+ try{
+  if(sessionStorage.getItem(UPDATE_MARKER)==='1'){
+   sessionStorage.removeItem(UPDATE_MARKER);
+   if(window.stod1CloseAllModals) window.stod1CloseAllModals('update_backdrop');
+   if(updateBd) updateBd.style.display='block';
+  }
+ }catch(e){}
  const PANEL_CONFIG={
   goal:{ label:'Målsättning', frameId:'frame-goal', src:GOAL_SRC, hash:'#reset-panel-' },
   notes:{ label:'Övriga noteringar', frameId:'frame-notes', src:NOTES_SRC, hash:'#reset-panel-' },
@@ -701,6 +724,24 @@ header.app .dropdown .menu{ z-index:20020 !important; }
   try{
    var frame=document.getElementById(id);
    if(frame) frame.src = src + hashPrefix + Date.now();
+  }catch(e){}
+ }
+ function checkPublishedVersion(){
+  try{
+   var checkUrl=new URL(window.location.href);
+   checkUrl.searchParams.set('stod1-version-check', Date.now());
+   fetch(checkUrl.toString(), { cache:'no-store' }).then(function(response){
+    if(!response.ok) return '';
+    return response.text();
+   }).then(function(html){
+    var match=html.match(/const APP = \{ version: '([^']+)' \};/);
+    if(!match || match[1]===APP.version) return;
+    try{ sessionStorage.setItem(UPDATE_MARKER, '1'); }catch(e){}
+    var freshUrl=new URL(window.location.href);
+    freshUrl.searchParams.delete('stod1-version-check');
+    freshUrl.searchParams.set('v', match[1]);
+    window.location.replace(freshUrl.toString());
+   }).catch(function(){});
   }catch(e){}
  }
  function getActiveTab(){
@@ -722,6 +763,7 @@ header.app .dropdown .menu{ z-index:20020 !important; }
    resetFrame('frame-notes', NOTES_SRC, '#reset-all-');
    resetFrame('frame-savings', SAVINGS_SRC, '#reset-all-');
    flash(btnAll, 'Rensat');
+   checkPublishedVersion();
   });
  }
  if(btnPanel){
