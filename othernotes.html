@@ -107,10 +107,6 @@
 .card > header{position:relative}
 .collapse-toggle{position:absolute;right:12px;top:10px;background:transparent;color:#9ca3af;border:1px solid var(--line);border-radius:8px;padding:4px 8px;font-size:12px;cursor:pointer}
 .collapse-toggle:hover{background:var(--ink)}
-.out-sticky-toggle{position:absolute;right:12px;top:10px;background:transparent;color:#9ca3af;border:1px solid var(--line);border-radius:8px;padding:4px 8px;font-size:12px;cursor:pointer}
-.out-sticky-toggle:hover{background:var(--ink)}
-.out-sticky-toggle:focus-visible{outline:0;border-color:#3b82f6;box-shadow:0 0 0 4px var(--focus)}
-#sek_out.is-sticky{position:sticky;top:var(--sek-out-sticky-top,16px);align-self:start}
 .collapse-toggle:focus-visible{outline:0;border-color:#3b82f6;box-shadow:0 0 0 4px var(--focus)}
 .card > header[aria-expanded="false"] + .content{display:none}
 .notes-tools-row{grid-column:1/-1;display:grid;grid-template-columns:1.1fr 0.9fr;gap:16px;padding:16px 0 0 0}
@@ -144,14 +140,12 @@
 :root[data-theme="light"] .gs-tab{color:#334155}
 :root[data-theme="light"] .btn-ghost:hover,
 :root[data-theme="light"] .collapse-toggle:hover,
-:root[data-theme="light"] .out-sticky-toggle:hover{background:#eef2f7}
 :root[data-theme="light"] .warn{color:#92400e;background:#fff7ed;border-color:#fdba74}
 :root[data-theme="light"] #toast{background:#ffffff;color:#0f172a;border-color:#cbd5e1;box-shadow:0 8px 18px rgba(15,23,42,.14)}
 :root[data-theme="light"] #rikt_modal,
 :root[data-theme="light"] #rikt_modal > div{background-color:transparent}
 :root[data-theme="light"] #rikt_modal{background:rgba(15,23,42,.18) !important}
 :root[data-theme="light"] .collapse-toggle{color:#64748b}
-:root[data-theme="light"] .out-sticky-toggle{color:#64748b}
 </style>
 </head>
 <body>
@@ -206,7 +200,6 @@
  <div class="btns"><label><input type="radio" name="fm_choice" value="same"> Ska inte ändras</label><label><input type="radio" name="fm_choice" value="change"> Ska ändras</label></div>
  <div class="row fm-compact-row" id="fm_sandning_row" hidden><label for="fm_sandning">Skicka blankett via</label><div class="field"><select id="fm_sandning" class="short"><option value="">(välj)</option><option>E-post</option><option>Postadress</option></select></div></div>
  <div id="fm_warn" class="warn">Välj <b>Ska inte ändras</b> eller <b>Ska ändras</b>. Vid ändring behöver du även välja hur blanketten ska skickas.</div>
- <div class="btns"><button class="btn btn-primary" id="btn_fm_add" title="Välj när förmånstagarförordnande ska skickas via e-post eller post." type="button">Lägg till</button></div>
  <div class="hr"></div>
  </div>
  </section>
@@ -244,7 +237,7 @@
  </section>
     </div>
  <!-- Högerspalt -->
- <section class="card is-sticky" id="sek_out"><header><h2>Sammanställd text</h2><button class="out-sticky-toggle" id="btn_sticky_out" type="button">Lås upp</button></header>
+ <section class="card" id="sek_out"><header><h2>Sammanställd text</h2></header>
  <div class="content stack">
  <div id="output" class="out" aria-live="polite" aria-atomic="true">— tomt —</div>
  <div class="btns"><button class="btn btn-primary" id="btn_copy" type="button">Kopiera</button></div>
@@ -266,27 +259,6 @@ document.addEventListener('DOMContentLoaded', function(){
 // safeStorage + toast
 const safeStorage = (()=>{try{const t='__t'+Math.random().toString(36).slice(2);localStorage.setItem(t,'1');localStorage.removeItem(t);return localStorage;}catch(e){return{getItem:()=>null,setItem:()=>{},removeItem:()=>{}}}})();
 function showToast(m){const t=document.getElementById('toast');if(!t) return; t.textContent='✓ '+m;t.style.display='block';t.classList.add('show');clearTimeout(t.__to);t.__to=setTimeout(()=>{t.classList.remove('show');setTimeout(()=>{if(!t.classList.contains('show')) t.style.display='none';},170);},2200)}
-function initStickyOut(){
- const card=document.getElementById('sek_out');
- const btn=document.getElementById('btn_sticky_out');
- if(!card || !btn) return;
- const key='othernotes.stickyOut.v1';
- function updateStickyTop(){
-  const wasSticky=card.classList.contains('is-sticky');
-  if(wasSticky) card.classList.remove('is-sticky');
-  const rect=card.getBoundingClientRect();
-  const top=Math.max(0, Math.round(rect.top + (window.scrollY || window.pageYOffset || 0)));
-  card.style.setProperty('--sek-out-sticky-top', top+'px');
-  if(wasSticky) card.classList.add('is-sticky');
- }
- function loadLocked(){ try{ return safeStorage.getItem(key)!=='0'; }catch(_){ return true; } }
- function saveLocked(on){ try{ safeStorage.setItem(key, on ? '1' : '0'); }catch(_){ } }
- function apply(on){ updateStickyTop(); card.classList.toggle('is-sticky', !!on); btn.textContent=on ? 'Lås upp' : 'Lås fönster'; btn.setAttribute('aria-pressed', on ? 'true' : 'false'); }
- apply(loadLocked());
- window.addEventListener('resize', updateStickyTop);
- btn.addEventListener('click', function(){ const next=!card.classList.contains('is-sticky'); saveLocked(next); apply(next); });
-}
-initStickyOut();
 document.querySelectorAll('section.card[data-order-id]').forEach(card=>{ if(card.dataset.cardHidden==='1'){ card.hidden=true; card.setAttribute('data-card-disabled','1'); } });
 const notesLeftStack=document.getElementById('notes_left_stack');
 const store={};
@@ -327,7 +299,6 @@ const fmChoices=[...document.querySelectorAll('input[name="fm_choice"]')];
 const fmSandningRow=document.getElementById('fm_sandning_row');
 const selFM=document.getElementById('fm_sandning');
 const warnFM=document.getElementById('fm_warn');
-const btnFMAdd=document.getElementById('btn_fm_add');
 const selU=document.getElementById('annat_urspr');
 const selT=document.getElementById('annat_tillagg');
 const warnA=document.getElementById('annat_warn');
@@ -338,9 +309,9 @@ const awaitSaveForm=document.getElementById('await_save_form');
 const awaitSaveReason=document.getElementById('await_save_reason');
 const btnAwaitSaveCopy=document.getElementById('btn_await_save_copy');
 const btnNUpd=document.getElementById('btn_notes_update');
-function syncStandaloneButtons(){ [btnSchablonAdd, btnTPAdd, btnFMAdd, btnAnnatAdd, btnGrpCopy].forEach(btn=>{ if(btn) setStandaloneButtonState(btn, btn.classList.contains('active')); }); }
+function syncStandaloneButtons(){ [btnSchablonAdd, btnTPAdd, btnAnnatAdd, btnGrpCopy].forEach(btn=>{ if(btn) setStandaloneButtonState(btn, btn.classList.contains('active')); }); }
 function clearTPState(){ if(selPlac) selPlac.value=''; if(selVC) selVC.value=''; if(warnTP) warnTP.style.display='none'; setBlock('tp',''); if(btnTPAdd) setStandaloneButtonState(btnTPAdd, false); persistActiveButtons(); }
-function clearFMState(){ fmChoices.forEach(function(r){ r.checked=false; }); if(fmSandningRow) fmSandningRow.hidden=true; if(selFM) selFM.value=''; if(warnFM) warnFM.style.display='none'; setBlock('fm',''); if(btnFMAdd) setStandaloneButtonState(btnFMAdd, false); persistActiveButtons(); }
+function clearFMState(){ fmChoices.forEach(function(r){ r.checked=false; }); if(fmSandningRow) fmSandningRow.hidden=true; if(selFM) selFM.value=''; if(warnFM) warnFM.style.display='none'; setBlock('fm',''); }
 function clearAnnatState(){ if(selU) selU.value=''; if(selT) selT.value=''; if(warnA) warnA.style.display='none'; setBlock('annat',''); if(btnAnnatAdd) setStandaloneButtonState(btnAnnatAdd, false); persistActiveButtons(); }
 function clearNotesState(){ taNotes.value=''; setBlock('ovrigt',''); btnNUpd.classList.remove('active'); saveNotes(); }
 function clearNotesExtraState(){ if(!taNotesExtra) return; taNotesExtra.value=''; saveNotesExtra(); }
@@ -469,8 +440,7 @@ function getFMChoice(){ const selected=fmChoices.find(function(r){ return r.chec
 function validateFM(){ const choice=getFMChoice(); const sending=(selFM.value||'').trim(); const ok=choice==='same' || (choice==='change' && !!sending); warnFM.style.display=ok?'none':'block'; return ok ? {choice:choice,sending:sending} : null; }
 function buildFM(v){ if(v.choice==='same') return 'FÖRMÅNSTAGARFÖRORDNANDE\nVi har pratat om vem du vill ska få ersättningar och sparanden om du skulle avlida. Vi har säkerställt att förmånstagarförordnandena överensstämmer med dina önskemål och din nuvarande familjesituation. Inga förändringar är aktuella i dagsläget.'; return 'FÖRMÅNSTAGARFÖRORDNANDE\nVi har pratat om vem du vill ska få ersättningar och sparanden om du skulle avlida.\nRelevanta blanketter kommer att skickas till dig via '+(v.sending==='E-post'?'e-post':'post')+' för de försäkringar och sparanden där ändringar behöver göras. Det är ditt ansvar att fylla i, underteckna och skicka tillbaka blanketterna så att ändringarna kan registreras och börja gälla.'; }
 function updateFMVisibility(){ const change=getFMChoice()==='change'; fmSandningRow.hidden=!change; if(!change) selFM.value=''; }
-btnFMAdd.addEventListener('click', function(){ if(this.classList.contains('active')){ clearFMState(); showToast('Förmånstagarförordnande: borttagen'); return; } const v=validateFM(); if(!v) return; setBlock('fm',buildFM(v)); setStandaloneButtonState(this,true); persistActiveButtons(); showToast('Förmånstagarförordnande: tillagd'); });
-function syncFMIfActive(){ updateFMVisibility(); if(!btnFMAdd || !btnFMAdd.classList.contains('active')){ if(warnFM) warnFM.style.display='none'; return; } const v=validateFM(); if(!v){ setBlock('fm',''); setStandaloneButtonState(btnFMAdd,false); persistActiveButtons(); return; } setBlock('fm',buildFM(v)); }
+function syncFMIfActive(){ updateFMVisibility(); const v=validateFM(); if(!v){ setBlock('fm',''); if(warnFM) warnFM.style.display='none'; return; } setBlock('fm',buildFM(v)); if(warnFM) warnFM.style.display='none'; }
 fmChoices.forEach(function(r){ r.addEventListener('change',syncFMIfActive); });
 if(selFM){ ['input','change'].forEach(function(ev){ selFM.addEventListener(ev,syncFMIfActive); }); }
 if(btnGrpCopy){ btnGrpCopy.addEventListener('click', function(){ if(this.classList.contains('active')){ setBlock('grp',''); setStandaloneButtonState(this, false); persistActiveButtons(); showToast('Grp/Skador: borttagen'); return; } const text="GRP/SKADOR\nVi har i dag gått igenom ditt behov av fackliga försäkringar. Jag har informerat dig om hur ditt nuvarande försäkringsskydd ser ut och hänvisat dig till vår hemsida för eventuella kompletteringar. \nJag har även ställt frågor kring eventuella oanmälda skador och hänvisat dig till rätt kontaktväg för att hantera dessa."; setBlock('grp', text); setStandaloneButtonState(this, true); persistActiveButtons(); showToast('Grp/Skador: tillagd'); }); }
@@ -490,7 +460,7 @@ function safeFields(){ try{ safeStorage.setItem('othernotes.fields.v1', JSON.str
 taNotes.addEventListener('input', saveNotes); if(taNotesExtra) taNotesExtra.addEventListener('input', saveNotesExtra);
 // init
 try{ const s = JSON.parse(safeStorage.getItem('othernotes.store.v1')||'{}'); if(s && typeof s==='object'){ Object.keys(s).forEach(k=>{ if(typeof s[k]==='string') store[k]=s[k]; }); } }catch(_){ }
-renderOut(); restoreActiveButtons(); syncStandaloneButtons(); loadNotes(); loadNotesExtra(); try{ const f=JSON.parse(safeStorage.getItem('othernotes.fields.v1')||'{}'); if(f.tp_placeras) selPlac.value=f.tp_placeras; if(f.tp_valcentral) selVC.value=f.tp_valcentral; if(f.fm_choice){ const r=fmChoices.find(function(x){ return x.value===f.fm_choice; }); if(r) r.checked=true; } if(f.fm_sandning) selFM.value=f.fm_sandning; updateFMVisibility(); if(f.annat_urspr) selU.value=f.annat_urspr; if(f.annat_tillagg) selT.value=f.annat_tillagg; }catch(_){ }
+renderOut(); restoreActiveButtons(); syncStandaloneButtons(); loadNotes(); loadNotesExtra(); try{ const f=JSON.parse(safeStorage.getItem('othernotes.fields.v1')||'{}'); if(f.tp_placeras) selPlac.value=f.tp_placeras; if(f.tp_valcentral) selVC.value=f.tp_valcentral; if(f.fm_choice){ const r=fmChoices.find(function(x){ return x.value===f.fm_choice; }); if(r) r.checked=true; } if(f.fm_sandning) selFM.value=f.fm_sandning; updateFMVisibility(); syncFMIfActive(); if(f.annat_urspr) selU.value=f.annat_urspr; if(f.annat_tillagg) selT.value=f.annat_tillagg; }catch(_){ }
 function stod1ResetAll(){
  performFullReset();
  try{ safeStorage.removeItem('othernotes.collapse.v1'); }catch(_){ }

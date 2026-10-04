@@ -14,7 +14,7 @@
 })();
 </script>
 <script>
-const APP = { version: '2.2.240' };
+const APP = { version: '2.2.255' };
 </script>
 <style>
  :root{--bg:#0f172a;--panel:#111827;--card:#1f2937;--line:#2b3545;--text:#e5e7eb;--muted:#9ca3af;--accent:#0ea5e9;--ink:#0b1220}
@@ -205,6 +205,7 @@ header.app .dropdown .menu{ z-index:20020 !important; }
  <header><h2 id="update_title" style="margin:0;font-size:15px">Stöd1 har uppdaterats</h2></header>
  <div class="body">
  <p style="margin:0">Du använder nu den senaste publicerade versionen.</p>
+ <p style="margin:10px 0 0">Tryck på versionsnumret för att se vad som har ändrats.</p>
  </div>
  <div class="actions"><button class="btn-link" id="update_close" type="button">Stäng</button></div>
  </div>
@@ -644,6 +645,14 @@ header.app .dropdown .menu{ z-index:20020 !important; }
 <script>
 (function(){
  const CHANGELOG = [
+ { ver:'2.2.255', date:'2026-10-04', items:[ 'Sparbeslut: fälten för Annan sparnivå ligger nu samlade på samma rad.' ] },
+ { ver:'2.2.254', date:'2026-10-04', items:[ 'Sparbeslut: Annan sparnivå skiljer nu på nyspar och höjning.' ] },
+ { ver:'2.2.253', date:'2026-10-04', items:[ 'Förmånstagarförordnande: komplett val uppdaterar nu Sammanställd text automatiskt.' ] },
+ { ver:'2.2.252', date:'2026-10-04', items:[ 'Övriga noteringar: Sammanställd text följer nu det vanliga sidflödet.' ] },
+ { ver:'2.2.251', date:'2026-10-04', items:[ 'Uppdatering: uppdateringsfönstret visar nu hur du öppnar versionshistoriken.' ] },
+ { ver:'2.2.247', date:'2026-10-04', items:[ 'Uppfyllda behov: Tjänstepension och Sparbeslut uppdaterar nu sammanställd text automatiskt.' ] },
+ { ver:'2.2.243', date:'2026-10-04', items:[ 'Uppfyllda behov: Tjänstepension och Sparbeslut har nu egna tillägg och tydligare sammanställningar.' ] },
+ { ver:'2.2.241', date:'2026-10-04', items:[ 'Uppfyllda behov: Tjänstepension och Sparbeslut har nu separata sammanställningar.' ] },
  { ver:'2.2.239', date:'2026-10-04', items:[ 'Rensa allt: Stöd1 hämtar nu automatiskt en ny publicerad version.' ] },
  { ver:'2.2.237', date:'2026-09-25', items:[ 'Tjänstepension: PA16:s särskilda information ingår nu automatiskt vid omval.' ] },  
  { ver:'2.2.234', date:'2026-09-25', items:[ 'Tjänstepension: avtalsområde återställs när alla val tas bort.' ] },
@@ -689,7 +698,7 @@ header.app .dropdown .menu{ z-index:20020 !important; }
  if(!btnAll && !btnPanel) return;
  const STORAGE_KEYS=[
  'othernotes.store.v1','othernotes.notes.v1','othernotes.notes_extra.v1','othernotes.fields.v1','othernotes.active.v1','othernotes.collapse.v1','othernotes.order.v1','othernotes.order.default.v1.container',
- 'sparande.store.v1','sparande.notes.v1','sparande.notes_extra.v1','sparande.fields.v1','sparande.active.v1','sparande.collapse.v1','sparande.order.v1','sparande.order.default.v1.container',
+ 'sparande.store.v1','sparande.notes.v1','sparande.notes_tp.v1','sparande.notes_extra.v1','sparande.fields.v1','sparande.active.v1','sparande.collapse.v1','sparande.order.v1','sparande.order.default.v1.container',
  'goalsetting.store.v1','goalsetting.notes.v1','goalsetting.notes_extra.v1','goalsetting.fields.v1','goalsetting.active.v1','goalsetting.rikt.year','goalsetting.beta.tab.v1',
  'mb.forv.text.v1','mb.forvalta.text.v1','stod1.tasks.v1','stod1.tasks.text.v1','stod1.tasks.select.options.v1'
  ];
@@ -717,7 +726,7 @@ header.app .dropdown .menu{ z-index:20020 !important; }
  const PANEL_KEYS={
   goal:['goalsetting.store.v1','goalsetting.notes.v1','goalsetting.notes_extra.v1','goalsetting.fields.v1','goalsetting.active.v1','goalsetting.rikt.year','goalsetting.beta.tab.v1','mb.forv.text.v1','mb.forvalta.text.v1'],
   notes:['othernotes.store.v1','othernotes.notes.v1','othernotes.notes_extra.v1','othernotes.fields.v1','othernotes.active.v1','othernotes.collapse.v1','othernotes.order.v1','othernotes.order.default.v1.container'],
-  savings:['sparande.store.v1','sparande.notes.v1','sparande.notes_extra.v1','sparande.fields.v1','sparande.active.v1','sparande.collapse.v1','sparande.order.v1','sparande.order.default.v1.container']
+  savings:['sparande.store.v1','sparande.notes.v1','sparande.notes_tp.v1','sparande.notes_extra.v1','sparande.fields.v1','sparande.active.v1','sparande.collapse.v1','sparande.order.v1','sparande.order.default.v1.container']
  };
  function removeKeys(list){ (list||[]).forEach(k=>{ try{ localStorage.removeItem(k); }catch(e){} }); }
  function resetFrame(id, src, hashPrefix){
