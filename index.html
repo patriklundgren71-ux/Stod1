@@ -14,7 +14,7 @@
 })();
 </script>
 <script>
-const APP = { version: '2.2.255' };
+const APP = { version: '2.2.258' };
 </script>
 <style>
  :root{--bg:#0f172a;--panel:#111827;--card:#1f2937;--line:#2b3545;--text:#e5e7eb;--muted:#9ca3af;--accent:#0ea5e9;--ink:#0b1220}
@@ -193,7 +193,7 @@ header.app .dropdown .menu{ z-index:20020 !important; }
  <div>Version</div>
  <div>Skapad av: <span id="kundavisering_open" style="cursor:pointer">Patrik Lundgren</span></div>
  <div>Kontakt: patrik.lundgren@folksam.se</div>
- <div>Senast uppdaterad: 2026-10-04</div>
+ <div>Senast uppdaterad: 2026-10-07</div>
  <div>Internt stödverktyg för dokumentation, stödmaterial och praktiska arbetsverktyg.</div>
  </div>
  </div>
@@ -645,6 +645,9 @@ header.app .dropdown .menu{ z-index:20020 !important; }
 <script>
 (function(){
  const CHANGELOG = [
+ { ver:'2.2.258', date:'2026-10-07', items:[ 'Ändring - Premiepension: nya val för Allmänt råd och Inget råd.' ] },
+ { ver:'2.2.257', date:'2026-10-05', items:[ 'Ändring - Fusklappar: Skattexempel visas nu som en tydligare matris.' ] },
+ { ver:'2.2.256', date:'2026-10-05', items:[ 'Ändring - Fusklappar: Skattexempel använder nu tidigaste uttagsålder och riktålder.' ] },
  { ver:'2.2.255', date:'2026-10-04', items:[ 'Sparbeslut: fälten för Annan sparnivå ligger nu samlade på samma rad.' ] },
  { ver:'2.2.254', date:'2026-10-04', items:[ 'Sparbeslut: Annan sparnivå skiljer nu på nyspar och höjning.' ] },
  { ver:'2.2.253', date:'2026-10-04', items:[ 'Förmånstagarförordnande: komplett val uppdaterar nu Sammanställd text automatiskt.' ] },
@@ -794,17 +797,22 @@ header.app .dropdown .menu{ z-index:20020 !important; }
    <table>
     <thead>
      <tr>
-      <th>Situation och ålder</th>
-      <th>Inkomst före skatt</th>
-      <th>Kvar efter skatt</th>
-      <th>Skatt</th>
+      <th>Situation</th>
+      <th>Tidigaste uttagsålder</th>
+      <th>Riktålder</th>
      </tr>
     </thead>
     <tbody>
-     <tr><td>Ta ut hel pension och sluta arbeta vid 63 år</td><td>18 000 i pension</td><td>13 100</td><td>27 %</td></tr>
-     <tr><td>Ta ut pension och sluta arbeta vid 67 år</td><td>18 000 i pension</td><td>14 900</td><td>17 %</td></tr>
-     <tr><td>Fortsätta arbeta och inte ta ut pension vid 63 år</td><td>18 000 i lön</td><td>14 900</td><td>17 %</td></tr>
-     <tr><td>Fortsätta arbeta och inte ta ut pension vid 67 år</td><td>18 000 i lön</td><td>16 600</td><td>8 %</td></tr>
+     <tr>
+      <td>Ta ut hel pension och sluta arbeta</td>
+      <td>18 000 i pension<br>13 100 kvar efter skatt<br>Skatt: 27 %</td>
+      <td>18 000 i pension<br>14 900 kvar efter skatt<br>Skatt: 17 %</td>
+     </tr>
+     <tr>
+      <td>Fortsätta arbeta och inte ta ut pension</td>
+      <td>18 000 i lön<br>14 900 kvar efter skatt<br>Skatt: 17 %</td>
+      <td>18 000 i lön<br>16 600 kvar efter skatt<br>Skatt: 8 %</td>
+     </tr>
     </tbody>
    </table>
   </div>

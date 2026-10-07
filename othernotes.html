@@ -160,9 +160,8 @@
  <section class="card" data-order-id="ppm"><header><h2>Premiepension</h2></header>
  <div class="content stack">
  <div class="btns" data-group="ppm">
- <button class="btn btn-ghost" id="btn_ppm_byter" title="Välj när kunden flyttar PPM till AP7 Såfa." type="button">Byter</button>
- <button class="btn btn-ghost" id="btn_ppm_behaller" title="Välj när du rekommenderar att kunden behåller AP7 Såfa." type="button">Behåller</button>
- <button class="btn btn-ghost" id="btn_ppm_tackarnej" title="Välj när du har rekommenderat byte till AP7 Såfa men kunden tackar nej." type="button">Kund tackar nej</button>
+ <button class="btn btn-ghost" id="btn_ppm_byter" title="Välj när du har gett kunden ett allmänt råd att se över placeringarna." type="button">Allmänt råd</button>
+ <button class="btn btn-ghost" id="btn_ppm_behaller" title="Välj när du inte bedömer att kunden behöver se över den allmänna pensionen." type="button">Inget råd</button>
  </div>
  <div class="hr"></div>
  </div>
@@ -377,9 +376,8 @@ button.addEventListener('click',function(){ const current=load(); if(current.act
 }
 registerHybridInitializer('tpNewCard', initTpNewCard);
 // PPM
-ppmGroup.querySelector('#btn_ppm_byter').addEventListener('click',function(){ if(this.classList.contains('active')){ setBlock('ppm',''); setActiveInGroup('ppm', null); showToast('Premiepension: Byter borttagen'); return; } setBlock('ppm','PREMIEPENSION\nVi har loggat in på Pensionsmyndigheten och sett över din premiepension och beslutat att flytta över den till AP7 Såfa.'); setActiveInGroup('ppm', this); showToast('Premiepension: Byter tillagd'); });
-ppmGroup.querySelector('#btn_ppm_behaller').addEventListener('click',function(){ if(this.classList.contains('active')){ setBlock('ppm',''); setActiveInGroup('ppm', null); showToast('Premiepension: Behåller borttagen'); return; } setBlock('ppm','PREMIEPENSION\nJag har rekommenderat att du behåller AP7 Såfa för din premiepension och gör därför inga förändringar under dagens möte.'); setActiveInGroup('ppm', this); showToast('Premiepension: Behåller tillagd'); });
-ppmGroup.querySelector('#btn_ppm_tackarnej').addEventListener('click',function(){ if(this.classList.contains('active')){ setBlock('ppm',''); setActiveInGroup('ppm', null); showToast('Premiepension: Kund tackar nej borttagen'); return; } setBlock('ppm','PREMIEPENSION\nJag har rekommenderat dig att byta till AP7 Såfa. Du har valt att tacka nej till erbjudandet.'); setActiveInGroup('ppm', this); showToast('Premiepension: Kund tackar nej tillagd'); });
+ppmGroup.querySelector('#btn_ppm_byter').addEventListener('click',function(){ if(this.classList.contains('active')){ setBlock('ppm',''); setActiveInGroup('ppm', null); showToast('Premiepension: Allmänt råd borttaget'); return; } setBlock('ppm','ALLMÄN PENSION\nVi har gått igenom din premiepension på en övergripande nivå. Jag har gett dig ett allmänt råd att se över dina placeringar utifrån din situation och hänvisat dig till Pensionsmyndigheten för eventuella förändringar.'); setActiveInGroup('ppm', this); showToast('Premiepension: Allmänt råd tillagt'); });
+ppmGroup.querySelector('#btn_ppm_behaller').addEventListener('click',function(){ if(this.classList.contains('active')){ setBlock('ppm',''); setActiveInGroup('ppm', null); showToast('Premiepension: Inget råd borttaget'); return; } setBlock('ppm','ALLMÄN PENSION\nVi har gått igenom din allmänna pension på en övergripande nivå.'); setActiveInGroup('ppm', this); showToast('Premiepension: Inget råd tillagt'); });
 // Schablonberäkning
 btnSchablonAdd.addEventListener('click', function(){ if(this.classList.contains('active')){ setBlock('schablon',''); setStandaloneButtonState(this, false); persistActiveButtons(); showToast('Schablonberäkning: borttagen'); return; } setBlock('schablon', "SCHABLONBERÄKNING\nDu har valt att inte logga in på minPension.se vid detta rådgivningstillfälle. Vi har därför inte haft möjlighet att hämta exakta uppgifter om dina intjänade pensioner.\nFör att kunna genomföra en översiktlig pensionsanalys har vi i stället använt schablonberäkningar baserade på din nuvarande lön, antagna intjänandeperioder och allmänna pensionsregler.\nAnalysen ger en uppskattad prognos och kan avvika från din faktiska pensionsbehållning. Jag rekommenderar verifiering via minPension.se för mer precisa uppgifter.\nDu har tagit del av och godkänt att rådgivningen baseras på schabloniserade antaganden."); setStandaloneButtonState(this, true); persistActiveButtons(); showToast('Schablonberäkning: tillagd'); });
 // TP
