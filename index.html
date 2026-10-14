@@ -14,7 +14,7 @@
 })();
 </script>
 <script>
-const APP = { version: '2.2.258' };
+const APP = { version: '2.3.20' };
 </script>
 <style>
  :root{--bg:#0f172a;--panel:#111827;--card:#1f2937;--line:#2b3545;--text:#e5e7eb;--muted:#9ca3af;--accent:#0ea5e9;--ink:#0b1220}
@@ -144,6 +144,11 @@ header.app .dropdown .menu{ z-index:20020 !important; }
 <div class="spacer"></div>
 <!-- Fusklappar dropdown -->
 <div class="header-actions">
+<div class="dropdown" id="quicktexts_dd">
+<button aria-expanded="false" aria-haspopup="true" class="tool-trigger" id="btn_quicktexts">Snabbtexter ▾</button>
+<div aria-label="Snabbtexter" class="menu" id="quicktexts_menu" role="menu">
+</div>
+</div>
 <div class="dropdown" id="tools2_dd">
 <button aria-expanded="false" aria-haspopup="true" class="tool-trigger" id="btn_tools2">Verktyg ▾</button>
 <div aria-label="Verktyg" class="menu" id="tools2_menu" role="menu">
@@ -193,7 +198,7 @@ header.app .dropdown .menu{ z-index:20020 !important; }
  <div>Version</div>
  <div>Skapad av: <span id="kundavisering_open" style="cursor:pointer">Patrik Lundgren</span></div>
  <div>Kontakt: patrik.lundgren@folksam.se</div>
- <div>Senast uppdaterad: 2026-10-07</div>
+ <div>Senast uppdaterad: 2026-10-14</div>
  <div>Internt stödverktyg för dokumentation, stödmaterial och praktiska arbetsverktyg.</div>
  </div>
  </div>
@@ -516,6 +521,79 @@ header.app .dropdown .menu{ z-index:20020 !important; }
 </div>
 </div>
 
+<!-- =========================================================
+     SNABBTEXT: ANNAT MÅL HITTATS UNDER RÅDGIVNINGEN
+========================================================= -->
+<div aria-labelledby="other_goal_tool_title" aria-modal="true" class="backdrop" id="other_goal_tool_backdrop" role="dialog" style="display:none">
+<div class="modal" style="width:min(700px,94vw)">
+<header><h2 id="other_goal_tool_title" style="margin:0;font-size:15px">Annat mål hittats under rådgivningen</h2></header>
+<div class="body">
+<div style="display:grid;gap:12px">
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:end">
+<div>
+<label for="other_goal_tool_initial" style="display:block;color:#cbd5e1;font-size:13px;margin-bottom:6px">Ursprungsmål</label>
+<select id="other_goal_tool_initial" style="width:100%;background:var(--ink);color:var(--text);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:14px">
+<option value="">(välj)</option><option value="Pension">Pensionsspar</option><option value="Målspar">Målspar</option><option value="Tjänstepension">Tjänstepension</option><option value="Livförsäkring">Livförsäkring</option>
+</select>
+</div>
+<div>
+<label for="other_goal_tool_additional" style="display:block;color:#cbd5e1;font-size:13px;margin-bottom:6px">Tilläggsmål</label>
+<select id="other_goal_tool_additional" style="width:100%;background:var(--ink);color:var(--text);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:14px">
+<option value="">(välj)</option><option value="Pension">Pensionsspar</option><option value="Målspar">Målspar</option><option value="Tjänstepension">Tjänstepension</option><option value="Livförsäkring">Livförsäkring</option>
+</select>
+</div>
+</div>
+<div id="other_goal_tool_warn" class="muted" style="display:none;color:#fde68a;background:#251e0b;border:1px solid #795d19;border-radius:10px;padding:8px 10px">Välj Ursprungsmål och Tilläggsmål.</div>
+<div style="background:var(--ink);border:1px solid var(--line);border-radius:10px;padding:12px 14px">
+<div class="muted" style="margin-bottom:4px">Förhandsvisning</div>
+<div id="other_goal_tool_preview" style="white-space:pre-wrap">—</div>
+</div>
+</div>
+</div>
+<div class="actions"><button class="btn-link" id="other_goal_tool_clear" type="button">Rensa</button><button class="btn-link" id="other_goal_tool_copy" type="button">Kopiera</button><button class="btn-link" id="other_goal_tool_close" type="button">Stäng</button></div>
+</div>
+</div>
+
+<!-- =========================================================
+     SNABBTEXT: ÅTERBETALNINGSSKYDD
+========================================================= -->
+<div aria-labelledby="repayment_tool_title" aria-modal="true" class="backdrop" id="repayment_tool_backdrop" role="dialog" style="display:none">
+<div class="modal" style="width:min(820px,94vw)">
+<header><h2 id="repayment_tool_title" style="margin:0;font-size:15px">Återbetalningsskydd</h2></header>
+<div class="body">
+<div style="display:grid;gap:12px">
+<div style="background:var(--ink);border:1px solid var(--line);border-radius:10px;padding:10px 12px">
+<div style="font-weight:700;margin-bottom:8px">Situation</div>
+<div style="display:grid;gap:7px">
+<label><input type="radio" name="repayment_tool_scenario" value="rad1-decline"> Vi rekommenderar enligt Råd1. Kunden väljer inte enligt vårt/Råd1:s förslag</label>
+<label><input type="radio" name="repayment_tool_scenario" value="other-decline"> Vi rekommenderar annat alternativ. Kunden väljer inte enligt vårt förslag</label>
+<label><input type="radio" name="repayment_tool_scenario" value="other-follow"> Vi rekommenderar annat alternativ. Kunden väljer enligt vårt förslag</label>
+</div>
+</div>
+<div style="background:var(--ink);border:1px solid var(--line);border-radius:10px;padding:10px 12px">
+<div style="font-weight:700;margin-bottom:8px">Åtgärd</div>
+<div style="display:flex;gap:18px;flex-wrap:wrap">
+<label><input type="radio" name="repayment_tool_action" value="läggs till"> Läggs till</label>
+<label><input type="radio" name="repayment_tool_action" value="inte läggs till"> Läggs inte till</label>
+<label><input type="radio" name="repayment_tool_action" value="tas bort"> Tas bort</label>
+</div>
+</div>
+<div>
+<label for="repayment_tool_reason" style="display:block;color:#cbd5e1;font-size:13px;margin-bottom:6px">Motivering</label>
+<textarea id="repayment_tool_reason" rows="4" placeholder="Skriv bakgrunden till rekommendationen" style="width:100%;resize:vertical;background:var(--ink);color:var(--text);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:14px"></textarea>
+</div>
+<div id="repayment_tool_warn" class="muted" style="display:none;color:#fde68a;background:#251e0b;border:1px solid #795d19;border-radius:10px;padding:8px 10px">Välj situation och åtgärd samt fyll i motivering.</div>
+<div style="background:var(--ink);border:1px solid var(--line);border-radius:10px;padding:12px 14px">
+<div class="muted" style="margin-bottom:4px">Förhandsvisning</div>
+<div id="repayment_tool_preview_heading" style="font-weight:700;text-decoration:underline;margin-bottom:4px"></div>
+<div id="repayment_tool_preview" style="white-space:pre-wrap">—</div>
+</div>
+</div>
+</div>
+<div class="actions"><button class="btn-link" id="repayment_tool_clear" type="button">Rensa</button><button class="btn-link" id="repayment_tool_copy" type="button">Kopiera</button><button class="btn-link" id="repayment_tool_close" type="button">Stäng</button></div>
+</div>
+</div>
+
 
 <!-- =========================================================
      VERKTYG: AVKASTNING - HTML
@@ -645,6 +723,55 @@ header.app .dropdown .menu{ z-index:20020 !important; }
 <script>
 (function(){
  const CHANGELOG = [
+ { ver:'2.3.20', date:'2026-10-14', items:[ 'Ny Funktion - Snabbtexter: återbetalningsskydd kan nu dokumenteras med val, motivering och kopierbar text.' ] },
+ { ver:'2.3.19', date:'2026-10-14', items:[ 'Ny Funktion - Snabbtexter: Risk och Annat mål hittats under rådgivningen finns nu i en egen toppmeny.' ] },
+ { ver:'2.3.18', date:'2026-10-14', items:[ 'Ändring - Risk: risknivån kan nu ändras både uppåt och nedåt.' ] },
+ { ver:'2.3.17', date:'2026-10-14', items:[ 'Ändring - Uppfyllda behov: Sparbeslut visas nu ovanför Tjänstepension.' ] },
+ { ver:'2.3.16', date:'2026-10-14', items:[ 'Ändring - Övriga noteringar: Förmånstagarförordnande ingår nu i det gemensamma kortet med kryssrutor.' ] },
+ { ver:'2.3.14', date:'2026-10-13', items:[ 'Ändring - Uppfyllda behov och Övriga noteringar: svarta interna rutor har nu samma kompakta avstånd.' ] },
+ { ver:'2.3.13', date:'2026-10-13', items:[ 'Ändring - Övriga noteringar: egna tillägg uppdaterar nu sammanställd text direkt.' ] },
+ { ver:'2.3.11', date:'2026-10-13', items:[ 'Ändring - Övriga noteringar: valen har nu samma kompakta kryssrutedesign som Sparbeslut.' ] },
+ { ver:'2.3.10', date:'2026-10-12', items:[ 'Ny Funktion - Övriga noteringar: fyra noteringsdelar är nu samlade i ett gemensamt hybridkort.' ] },
+ { ver:'2.3.9', date:'2026-10-12', items:[ 'Ändring - Övriga noteringar: korten har nu nedtonade blå linjer.' ] },
+ { ver:'2.3.8', date:'2026-10-12', items:[ 'Ändring - Målsättning: målval och målkort har nu mer nedtonade blå linjer.' ] },
+ { ver:'2.3.7', date:'2026-10-12', items:[ 'Ändring - Uppfyllda behov: kortens blå linjer är nu mer nedtonade.' ] },
+ { ver:'2.3.6', date:'2026-10-12', items:[ 'Ändring - Uppfyllda behov: korten har nu samma blå accentdesign som Målsättning.' ] },
+ { ver:'2.3.5', date:'2026-10-12', items:[ 'Ny Funktion - Målsättning: tidigare pension eller minskad arbetstid kan nu anges med målsumma och spartid.' ] },
+ { ver:'2.3.4', date:'2026-10-12', items:[ 'Ny Funktion - Målsättning: ekonomisk trygghet kan nu anges med målsumma och spartid.' ] },
+ { ver:'2.3.0', date:'2026-10-12', items:[ 'Ändring - Målsättningskorten är färdigställda.' ] },
+ { ver:'2.2.302', date:'2026-10-12', items:[ 'Ändring - Målsättning: höjd livförsäkring visar måltext direkt efter angivna belopp.' ] },
+ { ver:'2.2.300', date:'2026-10-12', items:[ 'Ny Funktion - Målsättning: nytt alternativ för att höja en befintlig livförsäkring.' ] },
+ { ver:'2.2.297', date:'2026-10-12', items:[ 'Ny Funktion - Målsättning: alla målkort kan nu använda fritext och Andra mål – Förvalta är tillagt.' ] },
+ { ver:'2.2.295', date:'2026-10-12', items:[ 'Ny Funktion - Målsättning: nytt målkort för långsiktigt kapital med kapital, överskott och fritext.' ] },
+ { ver:'2.2.294', date:'2026-10-12', items:[ 'Ny Funktion - Målsättning: nytt målkort för att se över sparandet med Höja risk och Fritext.' ] },
+ { ver:'2.2.293', date:'2026-10-12', items:[ 'Ny Funktion - Målsättning: nytt fritextkort för Andra mål – Förverkliga.' ] },
+ { ver:'2.2.292', date:'2026-10-12', items:[ 'Ändring - Målsättning: alla målkort visar nu sitt textalternativ som radioknapp.' ] },
+ { ver:'2.2.291', date:'2026-10-12', items:[ 'Ändring - Målsättning: gåvomålet använder nu målsumma och spartid.' ] },
+ { ver:'2.2.289', date:'2026-10-11', items:[ 'Ändring - Målsättning: inmatningsfält ligger närmare etiketterna och målbelopp visas före spartid.' ] },
+ { ver:'2.2.288', date:'2026-10-11', items:[ 'Ny Funktion - Målsättning: nytt boendemål med spartid och kontantinsats.' ] },
+ { ver:'2.2.287', date:'2026-10-11', items:[ 'Ändring - Målsättning: resekortet visar nu underrubriken Göra en resa.' ] },
+ { ver:'2.2.286', date:'2026-10-11', items:[ 'Ny Funktion - Målsättning: nytt resemål med spartid och målsumma.' ] },
+ { ver:'2.2.285', date:'2026-10-11', items:[ 'Ny Funktion - Målsättning: nytt fritextkort för Andra mål – Gåva.' ] },
+ { ver:'2.2.284', date:'2026-10-11', items:[ 'Ny Funktion - Målsättning: nytt målkort för gåva till barn eller barnbarn.' ] },
+ { ver:'2.2.282', date:'2026-10-11', items:[ 'Ny Funktion - Målsättning: fritextkort för tidigare pension och Andra mål – Pension.' ] },
+ { ver:'2.2.281', date:'2026-10-11', items:[ 'Ny Funktion - Målsättning: nytt fritextkort för Andra mål – Trygghet.' ] },
+ { ver:'2.2.280', date:'2026-10-11', items:[ 'Ny Funktion - Målsättning: nytt målkort för tryggad familjeekonomi med livförsäkringsbelopp.' ] },
+ { ver:'2.2.279', date:'2026-10-11', items:[ 'Ny Funktion - Målsättning: nytt fritextkort för ekonomisk trygghet.' ] },
+ { ver:'2.2.278', date:'2026-10-11', items:[ 'Ny Funktion - Målsättning: alla huvudområden kan nu visa sina målval.' ] },
+ { ver:'2.2.277', date:'2026-10-11', items:[ 'Ny Funktion - Målsättning: huvudområdesflikarna kan nu visa antal valda mål.' ] },
+ { ver:'2.2.276', date:'2026-10-11', items:[ 'Ändring - Målsättning: symbolerna för Gåva och Förvalta följer nu förlagan bättre.' ] },
+ { ver:'2.2.275', date:'2026-10-10', items:[ 'Ändring - Målsättning: huvudområdena har nu symboler och ett tydligare flikutseende.' ] },
+ { ver:'2.2.274', date:'2026-10-10', items:[ 'Ändring - Målsättning: pensionsmålkorten visas nu direkt under målvalen.' ] },
+ { ver:'2.2.272', date:'2026-10-09', items:[ 'Ändring - Målsättning: målval och nya målkort har nu blå accentkanter.' ] },
+ { ver:'2.2.267', date:'2026-10-09', items:[ 'Ändring - Målsättning: tjänstepensionsmålets fasta text visas nu direkt med en enda kopieringsknapp.' ] },
+ { ver:'2.2.266', date:'2026-10-08', items:[ 'Ny Funktion - Målsättning: nytt målkort för att se över tjänstepensionen.' ] },
+ { ver:'2.2.265', date:'2026-10-08', items:[ 'Ändring - Målsättning: pensionsmålets sammanställda text uppdateras nu automatiskt.' ] },
+ { ver:'2.2.264', date:'2026-10-08', items:[ 'Ny Funktion - Målsättning: det första pensionsmålet visar nu ett eget målkort med sammanställd text.' ] },
+ { ver:'2.2.263', date:'2026-10-08', items:[ 'Ny Funktion - Målsättning: nytt navigationsskal med huvudområden och målval för Pension.' ] },
+ { ver:'2.2.262', date:'2026-10-08', items:[ 'Ändring - Gå i pension: måltexten skiljer nu på framtida slutlön och dagens jämförelsevärde.' ] },
+ { ver:'2.2.261', date:'2026-10-08', items:[ 'Ändring - Gå i pension: önskad pension är nu förinställd på 100 procent av inkomsten.' ] },
+ { ver:'2.2.260', date:'2026-10-08', items:[ 'Ändring - Gå i pension: valet mellan procent och belopp visas nu som radioknappar.' ] },
+ { ver:'2.2.259', date:'2026-10-08', items:[ 'Ändring - Gå i pension: önskad pension kan nu anges som procent eller belopp.' ] },
  { ver:'2.2.258', date:'2026-10-07', items:[ 'Ändring - Premiepension: nya val för Allmänt råd och Inget råd.' ] },
  { ver:'2.2.257', date:'2026-10-05', items:[ 'Ändring - Fusklappar: Skattexempel visas nu som en tydligare matris.' ] },
  { ver:'2.2.256', date:'2026-10-05', items:[ 'Ändring - Fusklappar: Skattexempel använder nu tidigaste uttagsålder och riktålder.' ] },
@@ -841,6 +968,7 @@ header.app .dropdown .menu{ z-index:20020 !important; }
  tabs.forEach(function(b){ b.addEventListener('click', function(){ show(b.dataset.tab); }); });
  show('goal');
  const dropdowns = [
+ { trigger:q('btn_quicktexts'), menu:q('quicktexts_menu') },
  { trigger:q('btn_tools'), menu:q('tools_menu') },
  { trigger:q('btn_tools2'), menu:q('tools2_menu') }
  ].filter(function(x){ return x.trigger && x.menu; });
@@ -982,7 +1110,7 @@ header.app .dropdown .menu{ z-index:20020 !important; }
  // Ändra textmallen i buildText() om dokumentationstexten ska ändras.
  // =========================================================
  const RISK_TOOL = {
- id:'risk', type:'verktyg', title:'Risk', order:15, enabled:true,
+ id:'risk', type:'snabbtext', title:'Risk', order:10, enabled:true,
  init:function(api){
  const button=q('module-risk'), initial=q('risk_tool_initial'), recommendation=q('risk_tool_recommendation'), warn=q('risk_tool_warn'), preview=q('risk_tool_preview'), clear=q('risk_tool_clear'), copyBtn=q('risk_tool_copy'), closeBtn=q('risk_tool_close');
  if(!button || !initial || !recommendation || !warn || !preview || !clear || !copyBtn || !closeBtn) return;
@@ -994,12 +1122,6 @@ header.app .dropdown .menu{ z-index:20020 !important; }
   const selectedRecommendation=(recommendation.value||'').trim();
   if(!selectedInitial || !selectedRecommendation){
    warn.textContent='Välj både Utgångsläge och Rekommendation.';
-   warn.style.display='block';
-   preview.textContent='—';
-   return null;
-  }
-  if(riskLevelValue(selectedRecommendation) <= riskLevelValue(selectedInitial)){
-   warn.textContent='Rekommendation måste vara högre risk än Utgångsläge.';
    warn.style.display='block';
    preview.textContent='—';
    return null;
@@ -1021,6 +1143,65 @@ header.app .dropdown .menu{ z-index:20020 !important; }
  clear.addEventListener('click', function(){ reset(); initial.focus(); });
  copyBtn.addEventListener('click', function(){ const values=validate(); if(!values) return; api.copyText(buildText(values)).then(function(){ if(window.stod1ShowToast) window.stod1ShowToast('Risktext kopierad'); }); });
  closeBtn.addEventListener('click', reset);
+ }
+ };
+
+ const OTHER_GOAL_QUICKTEXT = {
+ id:'other-goal', type:'snabbtext', title:'Annat mål hittats under rådgivningen', order:20, enabled:true,
+ init:function(api){
+  const button=q('module-other-goal'), initial=q('other_goal_tool_initial'), additional=q('other_goal_tool_additional'), warn=q('other_goal_tool_warn'), preview=q('other_goal_tool_preview'), clear=q('other_goal_tool_clear'), copyBtn=q('other_goal_tool_copy'), closeBtn=q('other_goal_tool_close');
+  if(!button || !initial || !additional || !warn || !preview || !clear || !copyBtn || !closeBtn) return;
+  bindModal('other_goal_tool_backdrop',['other_goal_tool_close']);
+  function goalText(value){ if(value==='Pension') return 'pensionsspar'; if(value==='Målspar') return 'målspar'; if(value==='Tjänstepension') return 'tjänstepension'; if(value==='Livförsäkring') return 'livförsäkring'; return String(value||'').toLowerCase(); }
+  function buildText(values){ const source=goalText(values.initial), addition=goalText(values.additional); return String(values.additional||'').toLocaleUpperCase('sv-SE')+'\n'+(values.additional==='Tjänstepension'?'Inledningsvis var tanken enbart att se över '+source+' men under rådgivningens gång ville du även se över din tjänstepension.':'Inledningsvis var tanken enbart att se över '+source+' men under rådgivningens gång ville du även starta ett '+addition+'.'); }
+  function validate(){
+   const selectedInitial=(initial.value||'').trim(), selectedAdditional=(additional.value||'').trim();
+   if(!selectedInitial || !selectedAdditional){ warn.textContent='Välj Ursprungsmål och Tilläggsmål.'; warn.style.display='block'; preview.textContent='—'; return null; }
+   if(selectedInitial===selectedAdditional){ warn.textContent='Ursprungsmål och Tilläggsmål kan inte vara samma.'; warn.style.display='block'; preview.textContent='—'; return null; }
+   const values={initial:selectedInitial,additional:selectedAdditional}; warn.style.display='none'; preview.textContent=buildText(values); return values;
+  }
+  function reset(){ initial.value=''; additional.value=''; warn.textContent='Välj Ursprungsmål och Tilläggsmål.'; warn.style.display='none'; preview.textContent='—'; }
+  button.addEventListener('click',function(e){ e.preventDefault(); reset(); openModal('other_goal_tool_backdrop','other_goal_tool_initial'); });
+  ['input','change'].forEach(function(ev){ initial.addEventListener(ev,validate); additional.addEventListener(ev,validate); });
+  clear.addEventListener('click',function(){ reset(); initial.focus(); });
+  copyBtn.addEventListener('click',function(){ const values=validate(); if(!values) return; api.copyText(buildText(values)).then(function(){ if(window.stod1ShowToast) window.stod1ShowToast('Annat mål kopierat'); }); });
+  closeBtn.addEventListener('click',reset);
+ }
+ };
+
+ const REPAYMENT_QUICKTEXT = {
+ id:'repayment', type:'snabbtext', title:'Återbetalningsskydd', order:30, enabled:true,
+ init:function(api){
+  const button=q('module-repayment'), scenarios=[].slice.call(document.querySelectorAll('input[name="repayment_tool_scenario"]')), actions=[].slice.call(document.querySelectorAll('input[name="repayment_tool_action"]')), reason=q('repayment_tool_reason'), warn=q('repayment_tool_warn'), heading=q('repayment_tool_preview_heading'), preview=q('repayment_tool_preview'), clear=q('repayment_tool_clear'), copyBtn=q('repayment_tool_copy'), closeBtn=q('repayment_tool_close');
+  if(!button || !scenarios.length || !actions.length || !reason || !warn || !heading || !preview || !clear || !copyBtn || !closeBtn) return;
+  bindModal('repayment_tool_backdrop',['repayment_tool_close']);
+  const SCENARIOS={
+   'rad1-decline':{ heading:'Vi rekommenderar enligt Råd1. Kunden väljer inte enligt vårt/Råd1:s förslag:', ending:'Du väljer att inte följa rekommendationen.' },
+   'other-decline':{ heading:'Vi rekommenderar annat alternativ. Kunden väljer inte enligt vårt förslag:', ending:'Du väljer att inte följa rekommendationen.' },
+   'other-follow':{ heading:'Vi rekommenderar annat alternativ. Kunden väljer enligt vårt förslag:', ending:'Du väljer att följa rekommendationen.' }
+  };
+  function selected(list){ const match=list.find(function(el){ return el.checked; }); return match ? match.value : ''; }
+  function cleanReason(value){ return String(value||'').trim().replace(/[.!?]+$/,''); }
+  function build(){
+   const scenario=SCENARIOS[selected(scenarios)], action=selected(actions), motivation=cleanReason(reason.value);
+   if(!scenario || !action || !motivation) return null;
+   const body='Efter genomgång av din familjesituation och dina behov har jag rekommenderat att återbetalningsskydd '+action+' på grund av '+motivation+'. '+scenario.ending;
+   return { heading:scenario.heading, body:body, full:scenario.heading+'\n'+body };
+  }
+  function render(){
+   const built=build();
+   warn.style.display='none';
+   if(!built){ heading.textContent=''; preview.textContent='—'; return null; }
+   heading.textContent=built.heading; preview.textContent=built.body; return built;
+  }
+  function validate(){ const built=build(); if(built){ warn.style.display='none'; return built; } warn.textContent='Välj situation och åtgärd samt fyll i motivering.'; warn.style.display='block'; return null; }
+  function reset(){ scenarios.concat(actions).forEach(function(el){ el.checked=false; }); reason.value=''; warn.style.display='none'; heading.textContent=''; preview.textContent='—'; }
+  button.addEventListener('click',function(e){ e.preventDefault(); reset(); openModal('repayment_tool_backdrop'); const first=scenarios[0]; if(first) first.focus(); });
+  scenarios.concat(actions).forEach(function(el){ el.addEventListener('change',render); });
+  reason.addEventListener('input',render);
+  clear.addEventListener('click',function(){ reset(); const first=scenarios[0]; if(first) first.focus(); });
+  copyBtn.addEventListener('click',function(){ const built=validate(); if(!built) return; api.copyText(built.full).then(function(){ if(window.stod1ShowToast) window.stod1ShowToast('Text om återbetalningsskydd kopierad'); }); });
+  closeBtn.addEventListener('click',reset);
  }
  };
 
@@ -1210,6 +1391,7 @@ header.app .dropdown .menu{ z-index:20020 !important; }
  }
  };
  // MENYREGISTER - HÄR BESTÄMS VAD SOM VISAS I MENYERNA
+ // type:'snabbtext' hamnar under Snabbtexter.
  // type:'verktyg' hamnar under Verktyg.
  // type:'fusklapp' hamnar under Fusklappar.
  // enabled:true visas i menyn, enabled:false döljs.
@@ -1243,6 +1425,8 @@ header.app .dropdown .menu{ z-index:20020 !important; }
  { id:'skattexempel', type:'fusklapp', title:'Skattexempel', order:35, enabled:true, init:function(){ const button=q('module-skattexempel'); if(!button||!q('skattexempel_backdrop')) return; bindModal('skattexempel_backdrop',['skattexempel_close']); button.addEventListener('click', function(e){ e.preventDefault(); openModal('skattexempel_backdrop'); }); } },
 
  RISK_TOOL,
+ OTHER_GOAL_QUICKTEXT,
+ REPAYMENT_QUICKTEXT,
  RETURN_TOOL,
  KUNDAVISERING_TOOL,
 
@@ -1383,6 +1567,7 @@ header.app .dropdown .menu{ z-index:20020 !important; }
  const btn=document.createElement('button'); btn.id='module-'+mod.id; btn.type='button'; btn.setAttribute('role','menuitem'); btn.textContent=mod.title; menu.appendChild(btn);
  });
  }
+ renderMenu('snabbtext','quicktexts_menu');
  renderMenu('fusklapp','tools_menu');
  renderMenu('verktyg','tools2_menu');
  const api={ q:q, copyText:copyText, openModal:openModal, closeModal:function(id){ const bd=q(id); if(bd) bd.style.display='none'; }, bindModal:bindModal, closeAllDropdowns:closeAllDropdowns };
