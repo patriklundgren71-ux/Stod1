@@ -21,8 +21,8 @@
  header.app h1{margin:0;font-size:18px}
  main{display:grid;gap:16px;grid-template-columns:1.1fr 0.9fr;align-items:start;padding:0 16px 16px}
  @media (max-width: 1000px){ main{grid-template-columns:1fr} }
- .card{background:var(--card);border:1px solid var(--accent);border-radius:10px;overflow:hidden}
- .card>header{background:transparent;border-bottom:1px solid var(--accent);padding:12px 14px}
+ .card{background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+ .card>header{background:transparent;border-bottom:1px solid #283244;padding:12px 14px}
  .card>header h2{margin:0;font-size:15px}
  .content-title{margin:0;font-size:15px;font-weight:600;color:var(--text)}
  .content{padding:14px 16px}
@@ -128,7 +128,7 @@
  .sparbeslut-field textarea{height:78px;min-height:78px;max-height:78px;resize:none}
  @media(max-width:1200px){.sparbeslut-grid,.sparbeslut-standard-row{grid-template-columns:1fr}}
  :root[data-theme="light"] .sparbeslut-field label{color:#334155}
- .tp-new-list{display:grid;gap:2px}
+ .tp-new-list{display:grid;gap:12px}
  .tp-new-await[hidden],.tp-new-list[hidden]{display:none}
  .tp-new-area{background:var(--ink);border:1px solid var(--line);border-radius:10px;padding:9px 12px;display:grid;gap:10px}
  .tp-new-area-head{display:flex;align-items:center;gap:8px;font-weight:700}
@@ -205,7 +205,7 @@
 <main>
  <div class="notes-tools-row"><div id="notes_tools_host" class="notes-tools"></div><div></div></div>
  <div class="stack" id="notes_left_stack" style="gap:16px">
- <section class="card" data-order-id="risk" data-card-hidden="1" data-card-disabled="1" data-card-kind="hybrid" data-hybrid-init="riskCard" data-storage-ns="sparande.hybrid.risk"><header><h2>Risk</h2></header>
+ <section class="card" data-order-id="risk" data-card-kind="hybrid" data-hybrid-init="riskCard" data-storage-ns="sparande.hybrid.risk"><header><h2>Risk</h2></header>
  <div class="content stack">
  <div class="risk-inline-grid">
  <div class="risk-inline-field"><label>Utgångsläge</label><select data-role="risk-initial"><option value="">(välj)</option><option>låg risk</option><option>medelrisk</option><option>hög risk</option></select></div>
@@ -237,7 +237,7 @@
  <div class="hr"></div>
  </div>
  </section>
-<section class="card" data-order-id="annat_mal" data-card-hidden="1" data-card-disabled="1" data-card-kind="hybrid" data-hybrid-init="annatMalEnkelCard" data-storage-ns="sparande.hybrid.annatmal.enkel" data-block-id="annat_mal"><header><h2>Annat mål hittats under rådgivningen</h2></header>
+<section class="card" data-order-id="annat_mal" data-card-kind="hybrid" data-hybrid-init="annatMalEnkelCard" data-storage-ns="sparande.hybrid.annatmal.enkel" data-block-id="annat_mal"><header><h2>Annat mål hittats under rådgivningen</h2></header>
  <div class="content">
  <div class="annatm-grid-top">
  <div class="annatm-field"><label for="annat_mal_urspr">Ursprungsmål</label><select id="annat_mal_urspr" class="short"><option value="">(välj)</option><option value="Pension">Pensionsspar</option><option value="Målspar">Målspar</option><option value="Tjänstepension">Tjänstepension</option><option value="Livförsäkring">Livförsäkring</option></select></div>
@@ -464,8 +464,8 @@ initStickyOut();
  if(shell) shell.remove();
  const riskCard=stack.querySelector(':scope > section.card[data-order-id="risk"]');
  const otherGoalCard=stack.querySelector(':scope > section.card[data-order-id="annat_mal"]');
- [sparCard,tpCard,riskCard,otherGoalCard].forEach(function(card){ if(card) stack.appendChild(card); });
- const pairs=[[sparCard,sparSummary],[tpCard,tpSummary]];
+ [tpCard,sparCard,riskCard,otherGoalCard].forEach(function(card){ if(card) stack.appendChild(card); });
+ const pairs=[[tpCard,tpSummary],[sparCard,sparSummary]];
  function syncRows(){
   const cards=[...stack.querySelectorAll(':scope > section.card[data-order-id]')].filter(function(card){ return card.dataset.cardHidden!=='1' && !card.hidden && card.getAttribute('data-card-disabled')!=='1'; });
   const singleColumn=window.matchMedia('(max-width: 1000px)').matches;
@@ -658,7 +658,7 @@ function initRiskCard(card){
  function norm(v){v=v&&typeof v==='object'?v:{};return {initial:String(v.initial||''),recommendation:String(v.recommendation||'')}}
  function load(){try{return norm(JSON.parse(safeStorage.getItem(stateKey)||'{}'))}catch(_){return norm({})}}
  function save(v){safeStorage.setItem(stateKey,JSON.stringify(norm(v)))}
- function error(v){if(!v.initial||!v.recommendation)return 'Välj både Utgångsläge och Rekommendation.';return ''}
+ function error(v){if(!v.initial||!v.recommendation)return 'Välj både Utgångsläge och Rekommendation.';if(level(v.recommendation)<=level(v.initial))return 'Rekommendation måste vara högre risk än Utgångsläge.';return ''}
  function build(v){return 'Utifrån din riskvilja, kunskap, erfarenhet och ekonomiska situation så rekommenderades du i utgångsläget '+v.initial+'. Med tanke på din långa sparhorisont så rekommenderar jag som rådgivare i stället att du väljer '+v.recommendation+'. Du väljer enligt mitt förslag.'}
  function read(){return norm({initial:initial.value,recommendation:recommendation.value})}
  function apply(v,show){v=norm(v);let e=error(v);initial.value=v.initial;recommendation.value=v.recommendation;warn.textContent=e||'Välj både Utgångsläge och Rekommendation.';warn.style.display=show&&e?'block':'none'}
