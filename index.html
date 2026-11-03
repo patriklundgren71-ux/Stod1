@@ -14,7 +14,7 @@
 })();
 </script>
 <script>
-const APP = { version: '2.3.26' };
+const APP = { version: '2.3.30' };
 </script>
 <style>
  :root{--bg:#0f172a;--panel:#111827;--card:#1f2937;--line:#2b3545;--text:#e5e7eb;--muted:#9ca3af;--accent:#0ea5e9;--ink:#0b1220}
@@ -198,7 +198,7 @@ header.app .dropdown .menu{ z-index:20020 !important; }
  <div>Version</div>
  <div>Skapad av: <span id="kundavisering_open" style="cursor:pointer">Patrik Lundgren</span></div>
  <div>Kontakt: patrik.lundgren@folksam.se</div>
- <div>Senast uppdaterad: 2026-10-23</div>
+ <div>Senast uppdaterad: 2026-11-03</div>
  <div>Internt stödverktyg för dokumentation, stödmaterial och praktiska arbetsverktyg.</div>
  </div>
  </div>
@@ -356,6 +356,16 @@ header.app .dropdown .menu{ z-index:20020 !important; }
 <div class="actions"><button class="btn-link" id="rpr_clear" type="button">Rensa</button><button class="btn-link" id="rpr_close" type="button">Stäng</button></div>
 </div>
 </div>
+<!-- Kommuner som tillhör Valcentralen modal -->
+<div aria-labelledby="valcentral_title" aria-modal="true" class="backdrop" id="valcentral_backdrop" role="dialog" style="display:none">
+<div class="modal" style="width:min(760px,94vw)"><header><h2 id="valcentral_title" style="margin:0;font-size:15px">Tillhör Valcentralen</h2></header>
+<div class="body"><div style="display:grid;gap:10px">
+<div style="background:var(--ink);border:1px solid var(--line);border-radius:10px;padding:10px 12px"><div style="font-weight:700;margin-bottom:4px">Regioner</div><div>Blekinge · Gotland · Kalmar · Kronoberg</div></div>
+<div><label for="valcentral_search" class="muted" style="display:block;margin-bottom:6px">Sök kommun</label><input id="valcentral_search" type="text" autocomplete="off" placeholder="Skriv kommunens namn" style="width:100%;background:var(--ink);color:var(--text);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:14px;outline:none"></div>
+<div id="valcentral_result" style="display:none;border-radius:10px;padding:8px 10px;font-weight:700"></div>
+<button class="tool-trigger" id="valcentral_toggle" type="button" aria-expanded="false" style="justify-self:start">Visa alla kommuner</button>
+<div id="valcentral_list" style="display:none;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px 16px;background:var(--ink);border:1px solid var(--line);border-radius:10px;padding:10px 12px;max-height:48vh;overflow:auto"><div>Alvesta</div><div>Aneby</div><div>Arvika</div><div>Avesta</div><div>Bengtsfors</div><div>Bollebygd</div><div>Borgholm</div><div>Borlänge</div><div>Dals-Ed</div><div>Degerfors</div><div>Ekerö</div><div>Eksjö</div><div>Emmaboda</div><div>Enköping</div><div>Essunga</div><div>Falun</div><div>Finspång</div><div>Färgelanda</div><div>Gagnef</div><div>Gislaved</div><div>Gnosjö</div><div>Grästorp</div><div>Götene</div><div>Hedemora</div><div>Herrljunga</div><div>Huddinge</div><div>Hultsfred</div><div>Hylte</div><div>Hällefors</div><div>Håbo</div><div>Högsby</div><div>Jokkmokk</div><div>Kalix</div><div>Kalmar</div><div>Karlstad</div><div>Kinda</div><div>Knivsta</div><div>Leksand</div><div>Lessebo</div><div>Lidingö</div><div>Lidköping</div><div>Linköping</div><div>Ljungby</div><div>Ludvika</div><div>Lysekil</div><div>Malå</div><div>Mark</div><div>Markaryd</div><div>Mellerud</div><div>Mjölby</div><div>Mora</div><div>Munkedal</div><div>Mönsterås</div><div>Mörbylånga</div><div>Norrköping</div><div>Nybro</div><div>Nykvarn</div><div>Nyköping</div><div>Nässjö</div><div>Orsa</div><div>Oskarshamn</div><div>Oxelösund</div><div>Pajala</div><div>Piteå</div><div>Robertsfors</div><div>Salem</div><div>Sigtuna</div><div>Skara</div><div>Skellefteå</div><div>Solna</div><div>Sotenäs</div><div>Storuman</div><div>Strängnäs</div><div>Strömstad</div><div>Sundbyberg</div><div>Sunne</div><div>Svenljunga</div><div>Säffle</div><div>Säter</div><div>Sävsjö</div><div>Södertälje</div><div>Tanum</div><div>Tierp</div><div>Tingsryd</div><div>Torsås</div><div>Tranemo</div><div>Trollhättan</div><div>Trosa</div><div>Uddevalla</div><div>Ulricehamn</div><div>Upplands Väsby</div><div>Upplands-Bro</div><div>Uppvidinge</div><div>Vaggeryd</div><div>Vara</div><div>Vaxholm</div><div>Vetlanda</div><div>Vimmerby</div><div>Vänersborg</div><div>Värmdö</div><div>Värnamo</div><div>Västervik</div><div>Växjö</div><div>Vårgårda</div><div>Ydre</div><div>Älmhult</div><div>Älvdalen</div><div>Älvkarleby</div><div>Älvsbyn</div><div>Åmål</div><div>Ånge</div><div>Östhammar</div><div>Överkalix</div></div>
+</div></div><div class="actions"><button class="btn-link" id="valcentral_close" type="button">Stäng</button></div></div></div>
 <!-- Barnbidrag modal -->
 <div aria-labelledby="bb_title" aria-modal="true" class="backdrop" id="bb_backdrop" role="dialog">
 <div class="modal" id="bb_modal" style="width:min(560px,94vw)">
@@ -723,6 +733,9 @@ header.app .dropdown .menu{ z-index:20020 !important; }
 <script>
 (function(){
  const CHANGELOG = [
+ { ver:'2.3.30', date:'2026-11-03', items:[ 'Ändring - Tjänstepension: instruktionstexten är borttagen från standardtexten vid avvaktan med beslut.' ] },
+ { ver:'2.3.29', date:'2026-11-03', items:[ 'Ändring - Fusklappen heter nu Tillhör Valcentralen.' ] },
+ { ver:'2.3.27', date:'2026-11-03', items:[ 'Ny Funktion - Fusklappar: du kan nu söka efter kommuner som tillhör Valcentralen.' ] },
  { ver:'2.3.26', date:'2026-10-23', items:[ 'Ändring - Premiepension: dokumentationstexterna för Allmänt råd och Inget råd är uppdaterade.' ] },
  { ver:'2.3.25', date:'2026-10-19', items:[ 'Ändring - Tjänstepension: PA16-omvalet innehåller inte längre den särskilda informationstexten.' ] },
  { ver:'2.3.24', date:'2026-10-18', items:[ 'Ny Funktion - Tjänstepension: ITP har nu valet Direktflytt med färdig dokumentationstext.' ] },
@@ -1403,6 +1416,21 @@ header.app .dropdown .menu{ z-index:20020 !important; }
  // order styr sorteringsordningen inom respektive meny.
  // =========================================================
  const MODULES = [
+ {
+ id:'valcentral', type:'fusklapp', title:'Tillhör Valcentralen', order:40, enabled:true,
+ init:function(){
+ const button=q('module-valcentral'), search=q('valcentral_search'), result=q('valcentral_result'), toggle=q('valcentral_toggle'), list=q('valcentral_list');
+ if(!button || !search || !result || !toggle || !list) return;
+ bindModal('valcentral_backdrop',['valcentral_close']);
+ const municipalities=['Alvesta','Hällefors','Nässjö','Trosa','Aneby','Högsby','Orsa','Uddevalla','Arvika','Jokkmokk','Oskarshamn','Ulricehamn','Avesta','Kalix','Oxelösund','Upplands-Bro','Bengtsfors','Kalmar','Pajala','Upplands Väsby','Bollebygd','Karlstad','Piteå','Uppvidinge','Borgholm','Kinda','Robertsfors','Vaggeryd','Borlänge','Knivsta','Salem','Vara','Dals-Ed','Leksand','Sigtuna','Vaxholm','Degerfors','Lessebo','Skara','Vetlanda','Ekerö','Lidingö','Skellefteå','Vimmerby','Eksjö','Lidköping','Solna','Vårgårda','Emmaboda','Linköping','Sotenäs','Vänersborg','Enköping','Ljungby','Storuman','Värmdö','Essunga','Ludvika','Strängnäs','Värnamo','Falun','Lysekil','Strömstad','Västervik','Finspång','Malå','Sundbyberg','Växjö','Färgelanda','Mark','Sunne','Ydre','Gagnef','Markaryd','Svenljunga','Åmål','Gislaved','Mellerud','Säffle','Ånge','Gnosjö','Mjölby','Säter','Älmhult','Grästorp','Mora','Sävsjö','Älvdalen','Götene','Munkedal','Södertälje','Älvkarleby','Hedemora','Mönsterås','Tanum','Älvsbyn','Herrljunga','Mörbylånga','Tierp','Östhammar','Huddinge','Norrköping','Tingsryd','Överkalix','Hultsfred','Nybro','Torsås','Hylte','Nykvarn','Tranemo','Håbo','Nyköping','Trollhättan'];
+ function normalized(value){ return String(value||'').trim().toLocaleLowerCase('sv-SE'); }
+ function reset(){ search.value=''; result.textContent=''; result.style.display='none'; list.style.display='none'; toggle.textContent='Visa alla kommuner'; toggle.setAttribute('aria-expanded','false'); }
+ function renderResult(){ const value=normalized(search.value); if(!value){ result.textContent=''; result.style.display='none'; return; } const matches=municipalities.filter(function(name){ return normalized(name).startsWith(value); }).sort(function(a,b){ return a.localeCompare(b,'sv'); }); result.textContent=matches.length ? matches.join(', ') : 'Kommunen finns inte i listan.'; result.style.display='block'; result.style.color=matches.length?'#bbf7d0':'#fde68a'; result.style.background=matches.length?'rgba(22,101,52,.28)':'#251e0b'; result.style.border=matches.length?'1px solid #16a34a':'1px solid #795d19'; }
+ button.addEventListener('click',function(e){ e.preventDefault(); reset(); openModal('valcentral_backdrop','valcentral_search'); });
+ search.addEventListener('input',renderResult);
+ toggle.addEventListener('click',function(){ const show=list.style.display==='none'; list.style.display=show?'grid':'none'; toggle.textContent=show?'Dölj alla kommuner':'Visa alla kommuner'; toggle.setAttribute('aria-expanded',show?'true':'false'); });
+ }
+ },
  {
  id:'barnbidrag', type:'fusklapp', title:'Barnbidrag', order:10, enabled:true,
  init:function(api){
